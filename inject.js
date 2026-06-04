@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.4.2';
+  var VERSION = '22.4.3';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -361,13 +361,24 @@
     }
     var existing = host.querySelector('.achord-w');
     if (userHasMsg(sh)) {
-      /* if a chip was clicked, keep welcome visible — only remove on restart */
-      if (existing && existing.getAttribute('data-chip-selected') === '1') return;
+      /* if a chip was clicked, keep welcome visible — only remove on restart.
+         mark it 'consumed' so a later restart (msg list cleared) rebuilds fresh */
+      if (existing && existing.getAttribute('data-chip-selected') === '1') {
+        existing.setAttribute('data-consumed', '1');
+        return;
+      }
       /* if user typed manually (no chip), remove welcome */
       if (existing) existing.remove();
       return;
     }
-    if (existing) return;
+    /* no user message: a fresh or just-restarted conversation */
+    if (existing) {
+      /* welcome from a finished conversation (chip used + msg sent) is stale —
+         rebuild it so 'שיחה חדשה' resets the chips. a freshly-clicked chip whose
+         message hasn't landed yet is NOT consumed, so it's left intact */
+      if (existing.getAttribute('data-consumed') === '1') existing.remove();
+      else return;
+    }
     var w = buildWelcome(sh);
     host.insertBefore(w, host.firstChild);
   }
