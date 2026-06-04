@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.4.0';
+  var VERSION = '22.4.1';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -284,14 +284,13 @@
   }
 
   function sendChip(sh, text) {
-    /* Try Botpress public APIs first (no textarea flash) */
+    /* Try Botpress public API first (no textarea flash).
+       NOTE: sendMessage(text) is the correct webchat v3 method — it renders a
+       user bubble and triggers the bot. sendEvent({type:'text'}) does NOT
+       deliver a user message (bot ignores it), so it must not be used here. */
     try {
-      if (window.botpress && typeof window.botpress.sendEvent === 'function') {
-        window.botpress.sendEvent({ type: 'text', text: text });
-        return;
-      }
-      if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
-        window.botpressWebChat.sendEvent({ type: 'text', text: text });
+      if (window.botpress && typeof window.botpress.sendMessage === 'function') {
+        window.botpress.sendMessage(text);
         return;
       }
       if (window.botpress && typeof window.botpress.sendText === 'function') {
