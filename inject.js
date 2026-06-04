@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.4.1';
+  var VERSION = '22.4.2';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -22,7 +22,7 @@
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:421px!important;height:560px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
-.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:48px!important;bottom:160px!important;width:421px!important;height:auto!important;max-height:calc(100vh - 208px)!important}
+.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:120px!important;bottom:160px!important;width:421px!important;height:auto!important;max-height:calc(100vh - 280px)!important}
 .bpHeader,.bpHeaderContainer{background:var(--ac-d)!important;color:#fff!important;padding:0!important;border-bottom:1.1px solid var(--ac-bf)!important;direction:rtl!important;position:relative!important;flex-shrink:0!important}
 .bpHeaderContentContainer{display:flex!important;direction:rtl!important;align-items:center!important;gap:5.5px!important;padding:15.4px 39.4px 15.4px 17.6px!important;background:transparent!important;border:none!important;width:100%!important;box-sizing:border-box!important}
 .bpHeaderContentTitle{font-size:17.6px!important;font-weight:600!important;color:var(--ac-id)!important;${F}!important;text-align:right!important;flex:1!important;margin:0!important;line-height:1.37!important;order:2!important;padding:0!important}
@@ -30,7 +30,7 @@
 .bpHeaderContentActionsContainer{display:flex!important;direction:rtl!important;gap:4px!important;align-items:center!important;order:3!important}
 .bpHeaderContentActionsIcons{color:#fff!important;cursor:pointer!important;border-radius:6px!important;width:12px!important;height:12px!important;padding:6px!important;stroke-width:2!important}
 .bpHeaderContentActionsIcons[aria-label*="Close" i]{display:none!important}
-.bpHeaderContentActionsIcons[aria-label*="Restart" i]{width:14px!important;height:14px!important;padding:5px!important;stroke-width:1.8!important}
+.bpHeaderContentActionsIcons[aria-label*="Restart" i]{width:25px!important;height:25px!important;padding:6px!important;stroke-width:1.8!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important}
 .bpHeaderContentActionsIcons:hover{background:rgba(255,255,255,.22)!important}
 .achord-bot-av{width:41px!important;height:38px!important;background:transparent!important;border:none!important;border-radius:0!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;flex-shrink:0!important;order:1!important}
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important}
@@ -58,12 +58,12 @@
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
 .bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
-.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:flex-end!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
+.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
 .bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus,.bpComposerContainer *:focus-visible,.bpComposerContainer>div:focus-within{outline:none!important;outline-color:transparent!important;outline-width:0!important;outline-offset:0!important;box-shadow:none!important;border-color:#E8DFCF!important}
-.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:21px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:1.57!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;order:1!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
+.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:21px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:1.57!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;order:2!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
 .bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
 .bpComposerInput::placeholder{color:#A89B85!important;font-size:15.326px!important;${F}!important}
-.bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:999px!important;width:39.411px!important;height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;order:2!important;align-self:flex-end!important;margin-bottom:1px!important}
+.bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:999px!important;width:39.411px!important;height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;order:1!important;align-self:center!important;margin-bottom:0!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled{background:#E8DFCF!important;opacity:1!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
@@ -255,7 +255,7 @@
   /* ============================================================ */
   /*  FAB icon toggle — chevron-down when chat open, bot when closed */
   /* ============================================================ */
-  var FAB_BOT = '<svg viewBox="0 0 33.65 30.55" style="width:26px;height:26px"><path fill="currentColor" opacity=".95" d="M33.6,19.62c-.04-.46-.32-.8-.66-1.06-.53-.24-.81-.26-1.38-.27-.17,0-.87.03-.98-.03v-.09s.01-.32.01-.32c-.02-1.63-.78-3.86-1.58-5.16-1.19-1.92-2.96-3.42-5.05-4.28-.45-.17-.9-.32-1.36-.45-.22-.05-.38-.07-.6-.14l-.04-.02c-.4-.17-2.99-.21-3.61-.22.05-.32.05-1.52.01-1.85.08-.1.25-.22.36-.31.42-.33.67-.65.89-1.14.34-.76.35-1.63.05-2.41-.36-.88-.94-1.34-1.8-1.71l-.14-.05c-.63-.14-.83-.14-1.47-.05-.47.1-.7.2-1.12.43h0c-.28.22-.63.5-.82.8-.37.58-.54,1.17-.54,1.75,0,.93.46,1.82,1.3,2.51.12.1.2.13.21.29.06.58,0,1.17.04,1.75-.58.01-2.56,0-3.04.16-1.18.09-2.89.74-3.91,1.35h-.01c-2.58,1.56-4.24,3.7-4.99,6.68-.19.76-.31,1.74-.26,2.52-.96-.01-2.28-.21-2.84.74-.04.06-.1.2-.14.26-.19.41-.17,5.14,0,5.6H.14c.11.36.35.66.68.84.12.07.2.09.34.11h.01c.42.15,1.46.12,1.9.07-.01.83-.05,1.58.15,2.4h0c0,.32.53,1.07.76,1.3.77.77,1.65.91,2.7.91h18.71c1.45,0,3.17.23,4.28-.9.9-.92.91-1.91.92-3.12v-.58c.4.03,1.37.05,1.75-.03,1.1-.11,1.33-1.26,1.3-2.16-.04-1.37.07-2.76-.04-4.12ZM12.08,23.75c-.4.27-.86.47-1.34.57-.26.05-.52.08-.78.08-.77,0-1.53-.23-2.17-.68-.75-.52-1.29-1.29-1.52-2.18-.22-.86-.14-1.77.24-2.57.54-1.14,1.61-1.95,2.87-2.14.2-.03.39-.04.58-.04,1.55,0,2.96.93,3.54,2.41.65,1.66.06,3.55-1.42,4.55ZM26.67,22.97c-.05.05-.1.11-.15.17-.66.73-1.58,1.18-2.56,1.25-.31.02-.62,0-.92-.05-.21-.03-.42-.09-.62-.16-.22-.08-.44-.18-.65-.3-.69-.4-1.24-1.02-1.56-1.75-.06-.13-.11-.26-.15-.4-.36-1.16-.15-2.42.57-3.4.56-.77,1.39-1.29,2.32-1.48h0c1.57-.31,3.17.39,4,1.76.83,1.37.72,3.11-.28,4.36Z"/></svg>';
+  var FAB_BOT = '<svg viewBox="0 0 33.65 30.55" preserveAspectRatio="xMidYMid meet" style="width:30px;height:27.2px;display:block"><path fill="currentColor" opacity=".95" d="M33.6,19.62c-.04-.46-.32-.8-.66-1.06-.53-.24-.81-.26-1.38-.27-.17,0-.87.03-.98-.03v-.09s.01-.32.01-.32c-.02-1.63-.78-3.86-1.58-5.16-1.19-1.92-2.96-3.42-5.05-4.28-.45-.17-.9-.32-1.36-.45-.22-.05-.38-.07-.6-.14l-.04-.02c-.4-.17-2.99-.21-3.61-.22.05-.32.05-1.52.01-1.85.08-.1.25-.22.36-.31.42-.33.67-.65.89-1.14.34-.76.35-1.63.05-2.41-.36-.88-.94-1.34-1.8-1.71l-.14-.05c-.63-.14-.83-.14-1.47-.05-.47.1-.7.2-1.12.43h0c-.28.22-.63.5-.82.8-.37.58-.54,1.17-.54,1.75,0,.93.46,1.82,1.3,2.51.12.1.2.13.21.29.06.58,0,1.17.04,1.75-.58.01-2.56,0-3.04.16-1.18.09-2.89.74-3.91,1.35h-.01c-2.58,1.56-4.24,3.7-4.99,6.68-.19.76-.31,1.74-.26,2.52-.96-.01-2.28-.21-2.84.74-.04.06-.1.2-.14.26-.19.41-.17,5.14,0,5.6H.14c.11.36.35.66.68.84.12.07.2.09.34.11h.01c.42.15,1.46.12,1.9.07-.01.83-.05,1.58.15,2.4h0c0,.32.53,1.07.76,1.3.77.77,1.65.91,2.7.91h18.71c1.45,0,3.17.23,4.28-.9.9-.92.91-1.91.92-3.12v-.58c.4.03,1.37.05,1.75-.03,1.1-.11,1.33-1.26,1.3-2.16-.04-1.37.07-2.76-.04-4.12ZM12.08,23.75c-.4.27-.86.47-1.34.57-.26.05-.52.08-.78.08-.77,0-1.53-.23-2.17-.68-.75-.52-1.29-1.29-1.52-2.18-.22-.86-.14-1.77.24-2.57.54-1.14,1.61-1.95,2.87-2.14.2-.03.39-.04.58-.04,1.55,0,2.96.93,3.54,2.41.65,1.66.06,3.55-1.42,4.55ZM26.67,22.97c-.05.05-.1.11-.15.17-.66.73-1.58,1.18-2.56,1.25-.31.02-.62,0-.92-.05-.21-.03-.42-.09-.62-.16-.22-.08-.44-.18-.65-.3-.69-.4-1.24-1.02-1.56-1.75-.06-.13-.11-.26-.15-.4-.36-1.16-.15-2.42.57-3.4.56-.77,1.39-1.29,2.32-1.48h0c1.57-.31,3.17.39,4,1.76.83,1.37.72,3.11-.28,4.36Z"/></svg>';
   var FAB_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;color:#fff"><polyline points="6 9 12 15 18 9"/></svg>';
 
   function syncFabIcon(sh) {
@@ -263,13 +263,14 @@
     var wc = sh.querySelector('.bpWebchat') || sh.querySelector('.bpFABWebchat');
     if (!icon || !wc) return;
     var isOpen = wc.classList.contains('bpOpen');
-    var state = icon.getAttribute('data-achord-fab');
-    if (isOpen && state !== 'open') {
-      icon.innerHTML = FAB_CHEVRON;
-      icon.setAttribute('data-achord-fab', 'open');
-    } else if (!isOpen && state !== 'closed') {
-      icon.innerHTML = FAB_BOT;
-      icon.setAttribute('data-achord-fab', 'closed');
+    /* re-assert by the rendered viewBox, not a flag — Botpress re-renders the
+       icon and wipes our content, which left a stale chevron when closed */
+    var svg = icon.querySelector('svg');
+    var curVB = svg ? svg.getAttribute('viewBox') : null;
+    var wantVB = isOpen ? '0 0 24 24' : '0 0 33.65 30.55';
+    if (curVB !== wantVB) {
+      icon.innerHTML = isOpen ? FAB_CHEVRON : FAB_BOT;
+      icon.setAttribute('data-achord-fab', isOpen ? 'open' : 'closed');
     }
   }
 
@@ -349,11 +350,16 @@
   function manageWelcome(sh) {
     var mlc = sh.querySelector('.bpMessageListContainer');
     if (!mlc) return;
+    /* host = the scrollable content, so the welcome scrolls up WITH the dialog
+       instead of staying pinned above it */
+    var host = mlc.querySelector('.bpMessageListViewport') || mlc;
+    /* clean up any stale copy placed as a sibling of mlc (pre-22.4.2 layout) */
     var container = mlc.parentElement;
-    if (!container) return;
-    var existing = container.querySelector(':scope > .achord-w');
-    var insideMlc = mlc.querySelector('.achord-w');
-    if (insideMlc) insideMlc.remove();
+    if (container) {
+      var stale = container.querySelector(':scope > .achord-w');
+      if (stale) stale.remove();
+    }
+    var existing = host.querySelector('.achord-w');
     if (userHasMsg(sh)) {
       /* if a chip was clicked, keep welcome visible — only remove on restart */
       if (existing && existing.getAttribute('data-chip-selected') === '1') return;
@@ -363,7 +369,7 @@
     }
     if (existing) return;
     var w = buildWelcome(sh);
-    container.insertBefore(w, mlc);
+    host.insertBefore(w, host.firstChild);
   }
 
   /* ============================================================ */
