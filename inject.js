@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.4.3';
+  var VERSION = '22.4.4';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -15,7 +15,8 @@
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
 .bpFabWrapper.bpFabWrapper{bottom:80px!important;right:24px!important;left:auto!important;z-index:9999!important}
-.bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease!important}
+.bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
+.bpFab.bpFab.achord-fab-open{background:#A89F8E!important;box-shadow:0 6px 16px rgba(73,73,73,.16)!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFabIcon{background:none!important;background-image:none!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;width:100%!important;height:100%!important}
 .bpFabIcon svg{display:block}
@@ -36,7 +37,7 @@
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important}
 .achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:3!important}
 .achord-expand-btn:hover{background:rgba(255,252,241,.42)!important}
-@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 160px)!important;bottom:120px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}}`;
+@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 160px)!important;bottom:120px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}.bpFabWrapper.bpFabWrapper{bottom:104px!important}.bpFab.bpFab{width:46px!important;height:46px!important;opacity:.3!important}.bpFab.bpFab:active,.bpFab.bpFab.achord-fab-open{opacity:1!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
@@ -45,7 +46,7 @@
 .bpAvatar *,[class*="MessageAvatar"] *{color:transparent!important;font-size:0!important;background:transparent!important}
 .bpMessageAvatarContainer{display:none!important}
 .bpMessageList,.bpMessageBlocksContainer{background:#FFFCF1!important}
-.bpMessageListViewport{padding-right:28px!important;padding-left:28px!important;gap:15px!important;direction:rtl!important;padding-top:24px!important;padding-bottom:24px!important}
+.bpMessageListViewport{padding-right:28px!important;padding-left:28px!important;gap:15px!important;direction:rtl!important;padding-top:24px!important;padding-bottom:24px!important;justify-content:flex-start!important}
 .bpMessageListContainer{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;scroll-behavior:smooth!important}
 .bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)) .bpMessageBlocksBubble{background:#EC854B!important;color:#fff!important;border:none!important;border-radius:10px!important;border-bottom-left-radius:4px!important;padding:11px 15px!important;max-width:80%!important}
 .bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)) .bpMessageBlocksBubble *{color:#fff!important}
@@ -58,7 +59,7 @@
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
 .bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
-.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
+.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:center!important;gap:11px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
 .bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus,.bpComposerContainer *:focus-visible,.bpComposerContainer>div:focus-within{outline:none!important;outline-color:transparent!important;outline-width:0!important;outline-offset:0!important;box-shadow:none!important;border-color:#E8DFCF!important}
 .bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:21px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:1.57!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;order:2!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
 .bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
@@ -72,7 +73,7 @@
   /* ============================================================ */
   /*  CSS — welcome panel                                         */
   /* ============================================================ */
-  var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:24px 0 12px;direction:rtl;${F};gap:15px;background:#FFFCF1;flex-shrink:0;border-bottom:1px solid #F0E8D8}
+  var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:24px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:15px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
 .achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:0 39px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
 .achord-wt{font-size:15px;line-height:1.45;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
 .achord-wp{font-size:13px;line-height:1.5;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
@@ -255,7 +256,7 @@
   /* ============================================================ */
   /*  FAB icon toggle — chevron-down when chat open, bot when closed */
   /* ============================================================ */
-  var FAB_BOT = '<svg viewBox="0 0 33.65 30.55" preserveAspectRatio="xMidYMid meet" style="width:30px;height:27.2px;display:block"><path fill="currentColor" opacity=".95" d="M33.6,19.62c-.04-.46-.32-.8-.66-1.06-.53-.24-.81-.26-1.38-.27-.17,0-.87.03-.98-.03v-.09s.01-.32.01-.32c-.02-1.63-.78-3.86-1.58-5.16-1.19-1.92-2.96-3.42-5.05-4.28-.45-.17-.9-.32-1.36-.45-.22-.05-.38-.07-.6-.14l-.04-.02c-.4-.17-2.99-.21-3.61-.22.05-.32.05-1.52.01-1.85.08-.1.25-.22.36-.31.42-.33.67-.65.89-1.14.34-.76.35-1.63.05-2.41-.36-.88-.94-1.34-1.8-1.71l-.14-.05c-.63-.14-.83-.14-1.47-.05-.47.1-.7.2-1.12.43h0c-.28.22-.63.5-.82.8-.37.58-.54,1.17-.54,1.75,0,.93.46,1.82,1.3,2.51.12.1.2.13.21.29.06.58,0,1.17.04,1.75-.58.01-2.56,0-3.04.16-1.18.09-2.89.74-3.91,1.35h-.01c-2.58,1.56-4.24,3.7-4.99,6.68-.19.76-.31,1.74-.26,2.52-.96-.01-2.28-.21-2.84.74-.04.06-.1.2-.14.26-.19.41-.17,5.14,0,5.6H.14c.11.36.35.66.68.84.12.07.2.09.34.11h.01c.42.15,1.46.12,1.9.07-.01.83-.05,1.58.15,2.4h0c0,.32.53,1.07.76,1.3.77.77,1.65.91,2.7.91h18.71c1.45,0,3.17.23,4.28-.9.9-.92.91-1.91.92-3.12v-.58c.4.03,1.37.05,1.75-.03,1.1-.11,1.33-1.26,1.3-2.16-.04-1.37.07-2.76-.04-4.12ZM12.08,23.75c-.4.27-.86.47-1.34.57-.26.05-.52.08-.78.08-.77,0-1.53-.23-2.17-.68-.75-.52-1.29-1.29-1.52-2.18-.22-.86-.14-1.77.24-2.57.54-1.14,1.61-1.95,2.87-2.14.2-.03.39-.04.58-.04,1.55,0,2.96.93,3.54,2.41.65,1.66.06,3.55-1.42,4.55ZM26.67,22.97c-.05.05-.1.11-.15.17-.66.73-1.58,1.18-2.56,1.25-.31.02-.62,0-.92-.05-.21-.03-.42-.09-.62-.16-.22-.08-.44-.18-.65-.3-.69-.4-1.24-1.02-1.56-1.75-.06-.13-.11-.26-.15-.4-.36-1.16-.15-2.42.57-3.4.56-.77,1.39-1.29,2.32-1.48h0c1.57-.31,3.17.39,4,1.76.83,1.37.72,3.11-.28,4.36Z"/></svg>';
+  var FAB_BOT = '<svg viewBox="0 -1.6 33.65 33.7" preserveAspectRatio="xMidYMid meet" style="width:29px;height:29px;display:block"><path fill="currentColor" opacity=".95" d="M33.6,19.62c-.04-.46-.32-.8-.66-1.06-.53-.24-.81-.26-1.38-.27-.17,0-.87.03-.98-.03v-.09s.01-.32.01-.32c-.02-1.63-.78-3.86-1.58-5.16-1.19-1.92-2.96-3.42-5.05-4.28-.45-.17-.9-.32-1.36-.45-.22-.05-.38-.07-.6-.14l-.04-.02c-.4-.17-2.99-.21-3.61-.22.05-.32.05-1.52.01-1.85.08-.1.25-.22.36-.31.42-.33.67-.65.89-1.14.34-.76.35-1.63.05-2.41-.36-.88-.94-1.34-1.8-1.71l-.14-.05c-.63-.14-.83-.14-1.47-.05-.47.1-.7.2-1.12.43h0c-.28.22-.63.5-.82.8-.37.58-.54,1.17-.54,1.75,0,.93.46,1.82,1.3,2.51.12.1.2.13.21.29.06.58,0,1.17.04,1.75-.58.01-2.56,0-3.04.16-1.18.09-2.89.74-3.91,1.35h-.01c-2.58,1.56-4.24,3.7-4.99,6.68-.19.76-.31,1.74-.26,2.52-.96-.01-2.28-.21-2.84.74-.04.06-.1.2-.14.26-.19.41-.17,5.14,0,5.6H.14c.11.36.35.66.68.84.12.07.2.09.34.11h.01c.42.15,1.46.12,1.9.07-.01.83-.05,1.58.15,2.4h0c0,.32.53,1.07.76,1.3.77.77,1.65.91,2.7.91h18.71c1.45,0,3.17.23,4.28-.9.9-.92.91-1.91.92-3.12v-.58c.4.03,1.37.05,1.75-.03,1.1-.11,1.33-1.26,1.3-2.16-.04-1.37.07-2.76-.04-4.12ZM12.08,23.75c-.4.27-.86.47-1.34.57-.26.05-.52.08-.78.08-.77,0-1.53-.23-2.17-.68-.75-.52-1.29-1.29-1.52-2.18-.22-.86-.14-1.77.24-2.57.54-1.14,1.61-1.95,2.87-2.14.2-.03.39-.04.58-.04,1.55,0,2.96.93,3.54,2.41.65,1.66.06,3.55-1.42,4.55ZM26.67,22.97c-.05.05-.1.11-.15.17-.66.73-1.58,1.18-2.56,1.25-.31.02-.62,0-.92-.05-.21-.03-.42-.09-.62-.16-.22-.08-.44-.18-.65-.3-.69-.4-1.24-1.02-1.56-1.75-.06-.13-.11-.26-.15-.4-.36-1.16-.15-2.42.57-3.4.56-.77,1.39-1.29,2.32-1.48h0c1.57-.31,3.17.39,4,1.76.83,1.37.72,3.11-.28,4.36Z"/></svg>';
   var FAB_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;color:#fff"><polyline points="6 9 12 15 18 9"/></svg>';
 
   function syncFabIcon(sh) {
@@ -267,10 +268,16 @@
        icon and wipes our content, which left a stale chevron when closed */
     var svg = icon.querySelector('svg');
     var curVB = svg ? svg.getAttribute('viewBox') : null;
-    var wantVB = isOpen ? '0 0 24 24' : '0 0 33.65 30.55';
+    var wantVB = isOpen ? '0 0 24 24' : '0 -1.6 33.65 33.7';
     if (curVB !== wantVB) {
       icon.innerHTML = isOpen ? FAB_CHEVRON : FAB_BOT;
       icon.setAttribute('data-achord-fab', isOpen ? 'open' : 'closed');
+    }
+    /* when the chat is open, mute the FAB to grey so it doesn't pull focus */
+    var fab = sh.querySelector('.bpFab');
+    if (fab) {
+      if (isOpen) fab.classList.add('achord-fab-open');
+      else fab.classList.remove('achord-fab-open');
     }
   }
 
