@@ -7,22 +7,22 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.3.0';
+  var VERSION = '22.4.0';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
   /*  CSS — base (chat structure, header, fab)                    */
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
-.bpFabWrapper.bpFabWrapper{bottom:24px!important;right:24px!important;left:auto!important;z-index:9999!important}
+.bpFabWrapper.bpFabWrapper{bottom:80px!important;right:24px!important;left:auto!important;z-index:9999!important}
 .bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFabIcon{background:none!important;background-image:none!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;width:100%!important;height:100%!important}
 .bpFabIcon svg{display:block}
-.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:104px!important;top:auto!important;width:421px!important;height:580px!important;max-height:calc(100vh - 200px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
+.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:421px!important;height:560px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
-.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:32px!important;bottom:104px!important;width:421px!important;height:auto!important;max-height:calc(100vh - 136px)!important}
+.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:48px!important;bottom:160px!important;width:421px!important;height:auto!important;max-height:calc(100vh - 208px)!important}
 .bpHeader,.bpHeaderContainer{background:var(--ac-d)!important;color:#fff!important;padding:0!important;border-bottom:1.1px solid var(--ac-bf)!important;direction:rtl!important;position:relative!important;flex-shrink:0!important}
 .bpHeaderContentContainer{display:flex!important;direction:rtl!important;align-items:center!important;gap:5.5px!important;padding:15.4px 39.4px 15.4px 17.6px!important;background:transparent!important;border:none!important;width:100%!important;box-sizing:border-box!important}
 .bpHeaderContentTitle{font-size:17.6px!important;font-weight:600!important;color:var(--ac-id)!important;${F}!important;text-align:right!important;flex:1!important;margin:0!important;line-height:1.37!important;order:2!important;padding:0!important}
@@ -57,11 +57,11 @@
 .bpMessageBlocksBubble p{margin-bottom:4px!important;font-size:15px!important;line-height:1.3!important}
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
-.bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important}
-.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important}
-.bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus{outline:none!important;box-shadow:none!important}
-.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:21px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:1.57!important;flex:1!important;width:100%!important;min-width:0!important;outline:none!important;box-shadow:none!important;resize:none!important;order:1!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
-.bpComposerInput:focus{outline:none!important;box-shadow:none!important;border-color:#E8DFCF!important}
+.bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
+.bpComposerContainer>div{display:flex!important;direction:rtl!important;align-items:flex-end!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
+.bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus,.bpComposerContainer *:focus-visible,.bpComposerContainer>div:focus-within{outline:none!important;outline-color:transparent!important;outline-width:0!important;outline-offset:0!important;box-shadow:none!important;border-color:#E8DFCF!important}
+.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:21px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:1.57!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;order:1!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
+.bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
 .bpComposerInput::placeholder{color:#A89B85!important;font-size:15.326px!important;${F}!important}
 .bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:999px!important;width:39.411px!important;height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;order:2!important;align-self:flex-end!important;margin-bottom:1px!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled{background:#E8DFCF!important;opacity:1!important}
@@ -284,17 +284,36 @@
   }
 
   function sendChip(sh, text) {
+    /* Try Botpress public APIs first (no textarea flash) */
+    try {
+      if (window.botpress && typeof window.botpress.sendEvent === 'function') {
+        window.botpress.sendEvent({ type: 'text', text: text });
+        return;
+      }
+      if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
+        window.botpressWebChat.sendEvent({ type: 'text', text: text });
+        return;
+      }
+      if (window.botpress && typeof window.botpress.sendText === 'function') {
+        window.botpress.sendText(text);
+        return;
+      }
+    } catch (e) {}
+    /* Fallback: hide textarea during send to prevent text flash */
     var ta = sh.querySelector('textarea.bpComposerInput, .bpComposer textarea, .bpComposer input');
     if (!ta) return;
     var proto = ta.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
     var setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    var origVisibility = ta.style.visibility;
+    ta.style.visibility = 'hidden';
     ta.focus();
     setter.call(ta, text);
     ta.dispatchEvent(new Event('input', { bubbles: true }));
     setTimeout(function () {
       var sb = sh.querySelector('.bpComposerSendButton');
       if (sb && ta.value === text) sb.click();
-    }, 60);
+      setTimeout(function () { ta.style.visibility = origVisibility || ''; }, 80);
+    }, 40);
   }
 
   function buildWelcome(sh) {
