@@ -7,49 +7,59 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.8';
+  var VERSION = '22.5.9';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
-  /*  Fresh-session reset — clear Botpress persistence so a new    */
-  /*  browser session starts with welcome + chips, not a saved     */
-  /*  conversation. sessionStorage survives reloads in same tab    */
-  /*  but is cleared when the browser/tab closes — exactly the     */
-  /*  signal we want.                                              */
+  /*  Fresh-session reset — timestamp-based.                       */
+  /*  sessionStorage isn't reliable because Chrome "Continue where  */
+  /*  you left off" restores it even after Cmd+Q. Use a localStorage*/
+  /*  heartbeat instead: while the page is active we update a       */
+  /*  timestamp every 20s. If the gap since the last heartbeat is   */
+  /*  bigger than RESET_GAP_MS, treat as a new visit and wipe Botpress
+  /*  state.                                                        */
   /* ============================================================ */
-  (function resetIfNewBrowserSession() {
+  var ACHORD_LAST_KEY = 'achord-last-active';
+  var RESET_GAP_MS = 5 * 60 * 1000; /* 5 minutes — adjust for production */
+  (function resetIfStaleSession() {
     try {
-      var SK = 'achord-session-active';
-      if (sessionStorage.getItem(SK)) return;
-      var toRemove = [];
-      for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (k && /botpress|^bp[-_]/i.test(k)) toRemove.push(k);
+      var last = parseInt(localStorage.getItem(ACHORD_LAST_KEY) || '0', 10);
+      var now = Date.now();
+      var isStale = !last || (now - last > RESET_GAP_MS);
+      if (isStale) {
+        var toRemove = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && k !== ACHORD_LAST_KEY && /botpress|^bp[-_]/i.test(k)) toRemove.push(k);
+        }
+        toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+        var tryRestart = function () {
+          try {
+            if (window.botpress && typeof window.botpress.sendEvent === 'function') {
+              window.botpress.sendEvent({ type: 'CLEAR_CHANNEL' });
+              return true;
+            }
+          } catch (e) {}
+          try {
+            if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
+              window.botpressWebChat.sendEvent({ type: 'CLEAR_CHANNEL' });
+              return true;
+            }
+          } catch (e) {}
+          return false;
+        };
+        var attempts = 0;
+        var iv = setInterval(function () {
+          if (tryRestart() || ++attempts > 20) clearInterval(iv);
+        }, 300);
       }
-      toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
-      sessionStorage.setItem(SK, '1');
-      /* If Botpress already loaded in-memory state, ask it to restart.  */
-      /* Multiple try paths because the API surface varies by version.   */
-      var tryRestart = function () {
-        try {
-          if (window.botpress && typeof window.botpress.sendEvent === 'function') {
-            window.botpress.sendEvent({ type: 'CLEAR_CHANNEL' });
-            return true;
-          }
-        } catch (e) {}
-        try {
-          if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
-            window.botpressWebChat.sendEvent({ type: 'CLEAR_CHANNEL' });
-            return true;
-          }
-        } catch (e) {}
-        return false;
-      };
-      /* Botpress may not be ready yet — retry a few times */
-      var attempts = 0;
-      var iv = setInterval(function () {
-        if (tryRestart() || ++attempts > 20) clearInterval(iv);
-      }, 300);
+      localStorage.setItem(ACHORD_LAST_KEY, String(now));
+      /* Heartbeat to keep the timestamp fresh while the user is here. */
+      setInterval(function () {
+        if (document.visibilityState !== 'hidden') {
+          try { localStorage.setItem(ACHORD_LAST_KEY, String(Date.now())); } catch (e) {}
+        }
+      }, 20 * 1000);
     } catch (e) { /* never break injection over reset failure */ }
   })();
 
@@ -114,6 +124,7 @@ svg.bpComposerSendButton *{stroke:#fff!important}
 svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
+.bpComposerContainer [class*="lucide-loader" i],.bpComposerContainer [class*="loader-circle" i],.bpComposerContainer [class*="spinner" i],.bpComposerContainer [class*="loading" i]{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
 
@@ -279,16 +290,19 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 
   function swapSendButton(sh) {
     var sb = sh.querySelector('.bpComposerSendButton');
-    if (!sb || sb.getAttribute('data-v') === '22.5.4') return;
-    /* Botpress changed structure: .bpComposerSendButton is now sometimes the
-       SVG itself, sometimes a parent of an SVG. Handle both. */
+    if (!sb) return;
     var svg = sb.tagName.toLowerCase() === 'svg' ? sb : sb.querySelector('svg');
     if (!svg) return;
+    /* Detect if our arrow is already in place — checking for the unique
+       starting coords of SEND_ARROW ('M15 4H2'). If Botpress swapped in
+       a loading spinner or up-arrow, our marker is gone and we re-swap. */
+    var firstPath = svg.querySelector('path');
+    var d = firstPath ? firstPath.getAttribute('d') : '';
+    if (d && d.indexOf('M15 4H2') !== -1) return;
     svg.setAttribute('viewBox', '0 0 17 8');
     svg.setAttribute('fill', 'none');
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     svg.insertAdjacentHTML('beforeend', SEND_ARROW);
-    sb.setAttribute('data-v', '22.5.4');
   }
 
   function swapNativeIcons(sh) {
