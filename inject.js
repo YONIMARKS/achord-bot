@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.10';
+  var VERSION = '22.5.11';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -131,7 +131,9 @@ svg.bpComposerSendButton *{stroke:#fff!important}
 svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
-.bpComposerContainer [class*="lucide-loader" i],.bpComposerContainer [class*="loader-circle" i],.bpComposerContainer [class*="spinner" i],.bpComposerContainer [class*="loading" i]{display:none!important}
+.bpComposerContainer [class*="lucide-loader" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loader-circle" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="spinner" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loading" i]:not(.bpComposerInputLoader){display:none!important}
+/* v22.5.11 — thinking spinner: show Botpress's composer loader where Send sits, in brand orange (no transform → keeps the lucide spin animation) */
+.bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{display:flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;left:15.326px!important;right:auto!important;width:39.411px!important;height:39.411px!important;color:#FF8127!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
 
