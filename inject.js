@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.19';
+  var VERSION = '22.5.20';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -121,7 +121,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:10.947px;padding:0 8px 0 8px;width:100%;box-sizing:border-box;direction:rtl}
 .achord-wt{font-size:16.5px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
 .achord-wp{font-size:16px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext;word-break:normal;overflow-wrap:break-word}
-.achord-wsep{width:5px;height:19px;background:#E8B89A;border-radius:1px;align-self:center}
+.achord-wsep{width:19px;height:6px;background:url("data:image/svg+xml,%3Csvg%20width%3D'19'%20height%3D'6'%20viewBox%3D'0%200%2019%206'%20fill%3D'none'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'M0%205.58594L3.72211%200.00277944L18.6105%200.00277879L14.8884%205.58594L0%205.58594Z'%20fill%3D'%23F4C5AA'%2F%3E%3C%2Fsvg%3E")no-repeat center;background-size:19px 6px;align-self:center}
 .achord-ws{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 .achord-ch{font-size:16.5px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
 .achord-cs{font-size:15.5px;color:#6F5C45;text-align:center;margin:0;line-height:1.55;max-width:311px;padding:0 10px;box-sizing:border-box}
@@ -159,7 +159,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  Welcome panel content                                       */
   /* ============================================================ */
   var WT = 'היי! שמחים שבאת...';
-  var WP = 'נשמח לעזור לך להבין טוב יותר את המודל ולהפיק ממנו את מירב התועלת. תרגיש/י חופשי/ת לשאול כל מה שעולה על דעתך.';
+  var WP = 'נשמח לעזור לך להבין את המודל ולהפיק ממנו את מירב התועלת. תרגיש/י חופשי/ת לשאול כל מה שעולה על דעתך.';
   var CH = 'שנכיר?';
   var CS = 'תרצה/י לספר לנו מה הקשר שלך לאקדמיה?';
   var CHIPS = ['אני סטודנט', 'אני ממונת מגוון', 'אני חבר סגל', 'אחר', 'פשוט מתעניין'];
