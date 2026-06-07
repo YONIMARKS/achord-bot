@@ -7,8 +7,52 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.4';
+  var VERSION = '22.5.6';
   var F = "font-family:'Heebo',sans-serif";
+
+  /* ============================================================ */
+  /*  Fresh-session reset — clear Botpress persistence so a new    */
+  /*  browser session starts with welcome + chips, not a saved     */
+  /*  conversation. sessionStorage survives reloads in same tab    */
+  /*  but is cleared when the browser/tab closes — exactly the     */
+  /*  signal we want.                                              */
+  /* ============================================================ */
+  (function resetIfNewBrowserSession() {
+    try {
+      var SK = 'achord-session-active';
+      if (sessionStorage.getItem(SK)) return;
+      var toRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && /botpress|^bp[-_]/i.test(k)) toRemove.push(k);
+      }
+      toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+      sessionStorage.setItem(SK, '1');
+      /* If Botpress already loaded in-memory state, ask it to restart.  */
+      /* Multiple try paths because the API surface varies by version.   */
+      var tryRestart = function () {
+        try {
+          if (window.botpress && typeof window.botpress.sendEvent === 'function') {
+            window.botpress.sendEvent({ type: 'CLEAR_CHANNEL' });
+            return true;
+          }
+        } catch (e) {}
+        try {
+          if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
+            window.botpressWebChat.sendEvent({ type: 'CLEAR_CHANNEL' });
+            return true;
+          }
+        } catch (e) {}
+        return false;
+      };
+      /* Botpress may not be ready yet — retry a few times */
+      var attempts = 0;
+      var iv = setInterval(function () {
+        if (tryRestart() || ++attempts > 20) clearInterval(iv);
+      }, 300);
+    } catch (e) { /* never break injection over reset failure */ }
+  })();
+
 
   /* ============================================================ */
   /*  CSS — base (chat structure, header, fab)                    */
@@ -59,7 +103,7 @@
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
 .bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
-.bpComposerContainer>div{display:flex!important;direction:rtl!important;flex-direction:row!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
+.bpComposerContainer>div{display:flex!important;direction:ltr!important;flex-direction:row-reverse!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
 .bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus,.bpComposerContainer *:focus-visible,.bpComposerContainer>div:focus-within{outline:none!important;outline-color:transparent!important;outline-width:0!important;outline-offset:0!important;box-shadow:none!important;border-color:#E8DFCF!important}
 .bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:1093.642px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:24.084px!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
 .bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
@@ -78,8 +122,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* ============================================================ */
   var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:24px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:15px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
 .achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:0 39px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
-.achord-wt{font-size:15px;line-height:1.45;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
-.achord-wp{font-size:13px;line-height:1.5;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wt{font-size:16px;line-height:1.5;color:#6F5C45;font-weight:600;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wp{font-size:15px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
 .achord-wsep{width:5px;height:19px;background:#E8B89A;border-radius:1px;align-self:center}
 .achord-ws{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 .achord-ch{font-size:15px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
