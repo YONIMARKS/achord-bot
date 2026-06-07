@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.18';
+  var VERSION = '22.5.19';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -85,7 +85,7 @@
 .bpMessageContainer:has(>.bpMessageAvatarContainer) .bpMessageBlocksBubble *{color:#6F5C45!important}
 .bpMessageContainer:has(>.bpMessageAvatarContainer){flex-direction:row!important;justify-content:flex-start!important}
 .bpMessageBlocksBubble,.bpMessageBlocksBubble *{direction:rtl!important;text-align:right!important;unicode-bidi:plaintext!important;${F}!important}
-.bpMessageBlocksBubble p{margin-bottom:4px!important;font-size:15.326px!important;line-height:1.3!important;font-weight:400!important}
+.bpMessageBlocksBubble p{margin-bottom:4px!important;font-size:16px!important;line-height:1.45!important;font-weight:400!important}
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
 .bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
@@ -118,15 +118,15 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  CSS — welcome panel                                         */
   /* ============================================================ */
   var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:28.463px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:12px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
-.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:10.947px;padding:0 18px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
-.achord-wt{font-size:14px;line-height:1.564;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
-.achord-wp{font-size:14px;line-height:1.5;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:10.947px;padding:0 8px 0 8px;width:100%;box-sizing:border-box;direction:rtl}
+.achord-wt{font-size:16.5px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wp{font-size:16px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext;word-break:normal;overflow-wrap:break-word}
 .achord-wsep{width:5px;height:19px;background:#E8B89A;border-radius:1px;align-self:center}
 .achord-ws{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-.achord-ch{font-size:15.326px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
-.achord-cs{font-size:14px;color:#6F5C45;text-align:center;margin:0;line-height:1.55;max-width:311px;padding:0 20px;box-sizing:border-box}
-.achord-wc{display:flex;flex-wrap:wrap;justify-content:center;gap:6.568px;padding:10.947px 46px;direction:rtl;width:100%;box-sizing:border-box}
-.achord-wcb{padding:6px 13.137px;border:1.095px solid #FFA768;background:#fff;color:#D6722C;border-radius:1093.642px;font-size:12.042px;line-height:20.8px;${F};font-weight:500;cursor:pointer;transition:background .15s ease,transform .12s ease,opacity .15s ease;white-space:nowrap}
+.achord-ch{font-size:16.5px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
+.achord-cs{font-size:15.5px;color:#6F5C45;text-align:center;margin:0;line-height:1.55;max-width:311px;padding:0 10px;box-sizing:border-box}
+.achord-wc{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:10px 14px;direction:rtl;width:100%;box-sizing:border-box}
+.achord-wcb{padding:6px 13px;border:1.095px solid #FFA768;background:#fff;color:#D6722C;border-radius:1093.642px;font-size:13px;line-height:20.8px;${F};font-weight:500;cursor:pointer;transition:background .15s ease,transform .12s ease,opacity .15s ease;white-space:nowrap}
 .achord-wcb:hover:not(.achord-wcb-selected):not(.achord-wcb-disabled){background:#FFF4EB}
 .achord-wcb:active{transform:scale(.96)}
 .achord-wcb-selected{background:#FF8127!important;color:#fff!important;border-color:#FF8127!important;cursor:default!important;pointer-events:none}
