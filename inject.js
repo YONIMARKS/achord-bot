@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.15';
+  var VERSION = '22.5.16';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -125,11 +125,11 @@
 .bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:1093.642px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:24.084px!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important;margin-left:56.169px!important;margin-right:0!important;margin-inline-start:0!important;margin-inline-end:56.169px!important}
 .bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
 .bpComposerInput::placeholder{color:#A89B85!important;font-size:15.326px!important;${F}!important}
-.bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:0!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important}
+.bpComposerSendButton{background-color:#FF8127!important;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:17px auto!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:0!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important}
 svg.bpComposerSendButton{padding:11px!important;box-sizing:border-box!important}
 svg.bpComposerSendButton *{stroke:#fff!important}
 svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:1.4!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-.bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
+.bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background-color:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerContainer [class*="lucide-loader" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loader-circle" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="spinner" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loading" i]:not(.bpComposerInputLoader){display:none!important}
 /* v22.5.15 — during "thinking", NO spinner and NO flash. We paint the send-arrow
@@ -138,7 +138,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
    before first paint, so a spinner can never be shown for even one frame. (The JS
    swapLoaderToArrow still runs as a harmless fallback; its output is display:none'd.) */
 .bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{background-color:#FF8127!important;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:17px auto!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;box-sizing:border-box!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;animation:none!important}
-.bpComposerContainer .bpComposerInputLoader>*{display:none!important}
+/* v22.5.16 — idle send-arrow uses the SAME CSS background-image as the thinking
+   loader (not an inline SVG), so idle and thinking are byte-identical: same image,
+   same 17px size, same rendering. Hide both elements' inner SVG paths. */
+.bpComposerContainer .bpComposerInputLoader>*,.bpComposerContainer svg.bpComposerSendButton>*{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
 
@@ -177,6 +180,11 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   var RESTART_PATH = '<path fill="currentColor" d="M13.2821 2.82216V5.70809C13.2821 5.80376 13.2441 5.89552 13.1765 5.96317C13.1088 6.03082 13.0171 6.06883 12.9214 6.06883H10.0354C9.93977 6.06883 9.84802 6.03082 9.78037 5.96317C9.71271 5.89552 9.67471 5.80376 9.67471 5.70809C9.67471 5.61241 9.71271 5.52066 9.78037 5.45301C9.84802 5.38535 9.93977 5.34735 10.0354 5.34735H11.9925L10.1659 3.67591C10.1623 3.67231 10.1587 3.6681 10.1545 3.66449C9.46918 2.97957 8.59724 2.51177 7.6476 2.31953C6.69797 2.12728 5.71274 2.21911 4.81499 2.58355C3.91724 2.94799 3.14678 3.56887 2.59985 4.36864C2.05291 5.16841 1.75376 6.11161 1.73977 7.08041C1.72577 8.0492 1.99754 9.00065 2.52113 9.81589C3.04473 10.6311 3.79693 11.274 4.68378 11.6642C5.57062 12.0545 6.55279 12.1747 7.50758 12.01C8.46237 11.8453 9.34746 11.4029 10.0523 10.738C10.1219 10.6723 10.2147 10.637 10.3104 10.6397C10.4061 10.6425 10.4967 10.6832 10.5624 10.7528C10.6281 10.8224 10.6635 10.9152 10.6607 11.0109C10.658 11.1066 10.6173 11.1972 10.5477 11.2629C9.50027 12.2551 8.11131 12.8065 6.66853 12.8027H6.59157C5.66612 12.7896 4.75804 12.5495 3.94711 12.1034C3.13617 11.6573 2.44721 11.0189 1.94075 10.2442C1.43429 9.46952 1.12584 8.58232 1.04249 7.66054C0.959149 6.73876 1.10346 5.81062 1.46276 4.95767C1.82205 4.10471 2.38532 3.35305 3.10309 2.76873C3.82085 2.1844 4.67114 1.7853 5.57924 1.60648C6.48734 1.42767 7.42546 1.47461 8.31117 1.74319C9.19689 2.01177 10.0031 2.49376 10.6589 3.14683L12.5606 4.8874V2.82216C12.5606 2.72648 12.5986 2.63473 12.6663 2.56708C12.7339 2.49942 12.8257 2.46142 12.9214 2.46142C13.0171 2.46142 13.1088 2.49942 13.1765 2.56708C13.2441 2.63473 13.2821 2.72648 13.2821 2.82216Z"/>';
 
   var SEND_ARROW = '<path d="M15 4H2M2 4L5.4 1.5M2 4L5.4 6.5" fill="none" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>';
+  /* v22.5.16 — same arrow as a data-URI for use as a CSS/inline background-image, so
+     the idle send button and the thinking loader paint the IDENTICAL arrow (the inline
+     SVG path rendered slightly heavier than the loader's background image, causing the
+     "thick idle vs thin thinking" mismatch the user saw). */
+  var SEND_ARROW_URI = "data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E";
 
   /* ============================================================ */
   /*  Welcome panel content                                       */
@@ -531,11 +539,21 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     s.setProperty('visibility', 'visible', 'important');
     s.setProperty('width', '39.411px', 'important');
     s.setProperty('height', '39.411px', 'important');
-    s.setProperty('background', '#FF8127', 'important');
+    s.setProperty('background-color', '#FF8127', 'important');
+    /* paint the arrow as an inline background-image (identical to the loader) and hide
+       the inner SVG path, so idle and thinking show the exact same arrow. Inline wins
+       over Botpress's re-renders. */
+    s.setProperty('background-image', 'url("' + SEND_ARROW_URI + '")', 'important');
+    s.setProperty('background-repeat', 'no-repeat', 'important');
+    s.setProperty('background-position', 'center', 'important');
+    s.setProperty('background-size', '17px auto', 'important');
     s.setProperty('border-radius', '9999px', 'important');
     s.setProperty('margin', '0', 'important');
     s.setProperty('padding', '0', 'important');
     s.setProperty('opacity', '1', 'important');
+    for (var i = 0; i < sb.children.length; i++) {
+      sb.children[i].style.setProperty('display', 'none', 'important');
+    }
   }
 
   function tryRestartChat(sh) {
