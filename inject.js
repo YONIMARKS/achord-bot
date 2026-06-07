@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.11';
+  var VERSION = '22.5.13';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -132,8 +132,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerContainer [class*="lucide-loader" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loader-circle" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="spinner" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loading" i]:not(.bpComposerInputLoader){display:none!important}
-/* v22.5.11 — thinking spinner: show Botpress's composer loader where Send sits, in brand orange (no transform → keeps the lucide spin animation) */
-.bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{display:flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;left:15.326px!important;right:auto!important;width:39.411px!important;height:39.411px!important;color:#FF8127!important}
+/* v22.5.12 — during "thinking", no spinner (the chat already shows a typing indicator). Make Botpress's composer loader look IDENTICAL to the send button: same orange disc, same left-arrow, static. swapLoaderToArrow() injects SEND_ARROW into it; this just mirrors the send-button box styling and kills the spin. */
+.bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:11px!important;box-sizing:border-box!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;animation:none!important}
+.bpComposerContainer .bpComposerInputLoader path{fill:none!important;stroke:#fff!important;stroke-width:1.4!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
 
@@ -314,11 +315,32 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     svg.insertAdjacentHTML('beforeend', SEND_ARROW);
   }
 
+  /* v22.5.12 — while the bot is "thinking", Botpress unmounts the send button
+     and mounts a spinner (.bpComposerInputLoader). We don't want a spinner here
+     (the chat already shows a typing indicator) — we want the send arrow to stay
+     put, unchanged. So we turn the loader into an identical static arrow disc by
+     injecting the same SEND_ARROW (the CSS gives it the orange disc + kills the
+     spin). Re-asserted on every mutation, same pattern as swapSendButton. */
+  function swapLoaderToArrow(sh) {
+    var l = sh.querySelector('.bpComposerInputLoader');
+    if (!l) return;
+    var svg = l.tagName.toLowerCase() === 'svg' ? l : l.querySelector('svg');
+    if (!svg) return;
+    var firstPath = svg.querySelector('path');
+    var d = firstPath ? firstPath.getAttribute('d') : '';
+    if (d && d.indexOf('M15 4H2') !== -1) return;
+    svg.setAttribute('viewBox', '0 0 17 8');
+    svg.setAttribute('fill', 'none');
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.insertAdjacentHTML('beforeend', SEND_ARROW);
+  }
+
   function swapNativeIcons(sh) {
     /* close swap removed in v22.1 — close button hidden, FAB toggles instead */
     var restart = sh.querySelector('[aria-label*="Restart" i]');
     if (restart && restart.tagName.toLowerCase() === 'svg') swapIconSvg(restart, '1 1.5 13 12', RESTART_PATH);
     swapSendButton(sh);
+    swapLoaderToArrow(sh);
   }
 
   /* ============================================================ */
