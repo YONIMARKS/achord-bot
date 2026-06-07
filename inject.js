@@ -7,33 +7,36 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.9';
+  var VERSION = '22.5.10';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
-  /*  Fresh-session reset — timestamp-based.                       */
-  /*  sessionStorage isn't reliable because Chrome "Continue where  */
-  /*  you left off" restores it even after Cmd+Q. Use a localStorage*/
-  /*  heartbeat instead: while the page is active we update a       */
-  /*  timestamp every 20s. If the gap since the last heartbeat is   */
-  /*  bigger than RESET_GAP_MS, treat as a new visit and wipe Botpress
-  /*  state.                                                        */
+  /*  Fresh-session reset — sessionStorage flag + heartbeat gap.   */
+  /*  When ANY signal says "new visit", we (a) clear bp localStorage*/
+  /*  and (b) flag the run loop to programmatically click the in-app*/
+  /*  Restart button, which is the most reliable way to wipe an    */
+  /*  already-rendered Botpress conversation.                      */
   /* ============================================================ */
   var ACHORD_LAST_KEY = 'achord-last-active';
-  var RESET_GAP_MS = 5 * 60 * 1000; /* 5 minutes — adjust for production */
+  var ACHORD_SESS_KEY = 'achord-session-marker';
+  var RESET_GAP_MS = 30 * 1000; /* 30s — aggressive: any close+reopen resets */
   (function resetIfStaleSession() {
     try {
+      var hasSessFlag = !!sessionStorage.getItem(ACHORD_SESS_KEY);
       var last = parseInt(localStorage.getItem(ACHORD_LAST_KEY) || '0', 10);
       var now = Date.now();
-      var isStale = !last || (now - last > RESET_GAP_MS);
-      if (isStale) {
+      var gapStale = !last || (now - last > RESET_GAP_MS);
+      var forceReset = /[?&]reset=1\b/.test(location.search);
+      var isFresh = forceReset || !hasSessFlag || gapStale;
+      if (isFresh) {
         var toRemove = [];
         for (var i = 0; i < localStorage.length; i++) {
           var k = localStorage.key(i);
-          if (k && k !== ACHORD_LAST_KEY && /botpress|^bp[-_]/i.test(k)) toRemove.push(k);
+          if (k && k !== ACHORD_LAST_KEY && /botpress|^bp[-_]|webchat/i.test(k)) toRemove.push(k);
         }
         toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
-        var tryRestart = function () {
+        /* Try Botpress's own restart API immediately */
+        var tryRestartEvent = function () {
           try {
             if (window.botpress && typeof window.botpress.sendEvent === 'function') {
               window.botpress.sendEvent({ type: 'CLEAR_CHANNEL' });
@@ -50,16 +53,20 @@
         };
         var attempts = 0;
         var iv = setInterval(function () {
-          if (tryRestart() || ++attempts > 20) clearInterval(iv);
+          if (tryRestartEvent() || ++attempts > 20) clearInterval(iv);
         }, 300);
+        /* Flag the main run-loop to physically click Restart once the chat
+           is in the DOM (handles cases where Botpress already loaded the
+           previous conversation in memory). */
+        window.__achordNeedsRestart = true;
       }
+      sessionStorage.setItem(ACHORD_SESS_KEY, '1');
       localStorage.setItem(ACHORD_LAST_KEY, String(now));
-      /* Heartbeat to keep the timestamp fresh while the user is here. */
       setInterval(function () {
         if (document.visibilityState !== 'hidden') {
           try { localStorage.setItem(ACHORD_LAST_KEY, String(Date.now())); } catch (e) {}
         }
-      }, 20 * 1000);
+      }, 15 * 1000);
     } catch (e) { /* never break injection over reset failure */ }
   })();
 
@@ -74,10 +81,10 @@
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFabIcon{background:none!important;background-image:none!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;width:100%!important;height:100%!important}
 .bpFabIcon svg{display:block}
-.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:421px!important;height:636px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
+.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
-.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:120px!important;bottom:160px!important;width:421px!important;height:auto!important;max-height:calc(100vh - 280px)!important}
+.bpWebchat.achord-side,.bpFABWebchat.achord-side{right:24px!important;top:120px!important;bottom:160px!important;width:380px!important;height:auto!important;max-height:calc(100vh - 280px)!important}
 .bpHeader,.bpHeaderContainer{background:var(--ac-d)!important;color:#fff!important;padding:0!important;border-bottom:1.1px solid var(--ac-bf)!important;direction:rtl!important;position:relative!important;flex-shrink:0!important}
 .bpHeaderContentContainer{display:flex!important;direction:rtl!important;align-items:center!important;gap:5.5px!important;padding:15.4px 39.4px 15.4px 17.6px!important;background:transparent!important;border:none!important;width:100%!important;box-sizing:border-box!important}
 .bpHeaderContentTitle{font-size:17.6px!important;font-weight:600!important;color:var(--ac-id)!important;${F}!important;text-align:right!important;flex:1!important;margin:0!important;line-height:1.37!important;order:2!important;padding:0!important}
@@ -132,9 +139,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  CSS — welcome panel                                         */
   /* ============================================================ */
   var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:24px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:15px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
-.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:0 39px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
-.achord-wt{font-size:16px;line-height:1.5;color:#6F5C45;font-weight:600;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
-.achord-wp{font-size:15px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:0 18px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
+.achord-wt{font-size:16px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wp{font-size:15px;line-height:1.6;color:#6F5C45;font-weight:400;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
 .achord-wsep{width:5px;height:19px;background:#E8B89A;border-radius:1px;align-self:center}
 .achord-ws{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 .achord-ch{font-size:15px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
@@ -480,6 +487,44 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* ============================================================ */
   /*  Main run loop                                               */
   /* ============================================================ */
+  function pinSendButton(sh) {
+    /* Hard-pin the send button to the left with inline styles, so Botpress
+       can't move/hide it during loading transitions. Inline !important wins
+       against most things Botpress might re-apply. */
+    var sb = sh.querySelector('.bpComposerSendButton');
+    if (!sb) return;
+    var s = sb.style;
+    s.setProperty('position', 'absolute', 'important');
+    s.setProperty('left', '15.326px', 'important');
+    s.setProperty('right', 'auto', 'important');
+    s.setProperty('top', '50%', 'important');
+    s.setProperty('transform', 'translateY(-50%)', 'important');
+    s.setProperty('display', 'flex', 'important');
+    s.setProperty('visibility', 'visible', 'important');
+    s.setProperty('width', '39.411px', 'important');
+    s.setProperty('height', '39.411px', 'important');
+    s.setProperty('background', '#FF8127', 'important');
+    s.setProperty('border-radius', '9999px', 'important');
+    s.setProperty('margin', '0', 'important');
+    s.setProperty('padding', '0', 'important');
+    s.setProperty('opacity', '1', 'important');
+  }
+
+  function tryRestartChat(sh) {
+    /* Last-resort: simulate a click on the Restart icon in the header,
+       then auto-confirm whatever modal appears. */
+    var restart = sh.querySelector('[aria-label*="Restart" i]');
+    if (!restart) return false;
+    var clickable = restart.closest('button, [role="button"]') || restart;
+    try { clickable.click(); } catch (e) {}
+    /* Confirm any dialog that pops up (Botpress shows a Yes/No confirm). */
+    setTimeout(function () {
+      var confirmBtn = sh.querySelector('[role="dialog"] button, .bpModal button, [class*="confirm" i]');
+      if (confirmBtn) { try { confirmBtn.click(); } catch (e) {} }
+    }, 200);
+    return true;
+  }
+
   function run() {
     var sh = getShadow();
     if (!sh) return;
@@ -492,10 +537,16 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     injectAvatar(sh);
     injectExpandButton(sh);
     swapNativeIcons(sh);
+    pinSendButton(sh);
     syncFabIcon(sh);
     manageWelcome(sh);
     localize(sh);
     localize(document.body);
+    /* If we marked the session as needing reset, attempt the in-app restart
+       once Botpress has rendered the conversation. */
+    if (window.__achordNeedsRestart) {
+      if (tryRestartChat(sh)) { window.__achordNeedsRestart = false; }
+    }
   }
 
   /* Poll + observe */
