@@ -7,66 +7,35 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.16';
+  var VERSION = '22.5.17';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
-  /*  Fresh-session reset — sessionStorage flag + heartbeat gap.   */
-  /*  When ANY signal says "new visit", we (a) clear bp localStorage*/
-  /*  and (b) flag the run loop to programmatically click the in-app*/
-  /*  Restart button, which is the most reliable way to wipe an    */
-  /*  already-rendered Botpress conversation.                      */
+  /*  Fresh chat on every new page entry (v22.5.17).               */
+  /*  The Botpress webchat loader (cdn.botpress.cloud/webchat/...)  */
+  /*  loads BEFORE this script and restores the saved conversation */
+  /*  from localStorage, so clearing it on load is too late — the   */
+  /*  old chat is already rendered. Instead we wipe Botpress's      */
+  /*  webchat storage on pagehide (when leaving the page), so the   */
+  /*  NEXT entry always boots on clean storage and Botpress opens a */
+  /*  fresh conversation. Order-independent: no Framer script-order */
+  /*  change needed. Add ?reset=1 to the URL to force-wipe now.     */
   /* ============================================================ */
-  var ACHORD_LAST_KEY = 'achord-last-active';
-  var ACHORD_SESS_KEY = 'achord-session-marker';
-  var RESET_GAP_MS = 30 * 1000; /* 30s — aggressive: any close+reopen resets */
-  (function resetIfStaleSession() {
+  (function freshChatOnEntry() {
     try {
-      var hasSessFlag = !!sessionStorage.getItem(ACHORD_SESS_KEY);
-      var last = parseInt(localStorage.getItem(ACHORD_LAST_KEY) || '0', 10);
-      var now = Date.now();
-      var gapStale = !last || (now - last > RESET_GAP_MS);
-      var forceReset = /[?&]reset=1\b/.test(location.search);
-      var isFresh = forceReset || !hasSessFlag || gapStale;
-      if (isFresh) {
-        var toRemove = [];
-        for (var i = 0; i < localStorage.length; i++) {
-          var k = localStorage.key(i);
-          if (k && k !== ACHORD_LAST_KEY && /botpress|^bp[-_]|webchat/i.test(k)) toRemove.push(k);
-        }
-        toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
-        /* Try Botpress's own restart API immediately */
-        var tryRestartEvent = function () {
-          try {
-            if (window.botpress && typeof window.botpress.sendEvent === 'function') {
-              window.botpress.sendEvent({ type: 'CLEAR_CHANNEL' });
-              return true;
-            }
-          } catch (e) {}
-          try {
-            if (window.botpressWebChat && typeof window.botpressWebChat.sendEvent === 'function') {
-              window.botpressWebChat.sendEvent({ type: 'CLEAR_CHANNEL' });
-              return true;
-            }
-          } catch (e) {}
-          return false;
-        };
-        var attempts = 0;
-        var iv = setInterval(function () {
-          if (tryRestartEvent() || ++attempts > 20) clearInterval(iv);
-        }, 300);
-        /* Flag the main run-loop to physically click Restart once the chat
-           is in the DOM (handles cases where Botpress already loaded the
-           previous conversation in memory). */
-        window.__achordNeedsRestart = true;
-      }
-      sessionStorage.setItem(ACHORD_SESS_KEY, '1');
-      localStorage.setItem(ACHORD_LAST_KEY, String(now));
-      setInterval(function () {
-        if (document.visibilityState !== 'hidden') {
-          try { localStorage.setItem(ACHORD_LAST_KEY, String(Date.now())); } catch (e) {}
-        }
-      }, 15 * 1000);
+      var wipeBpStorage = function () {
+        try {
+          for (var i = localStorage.length - 1; i >= 0; i--) {
+            var k = localStorage.key(i);
+            if (k && /^bp-webchat|botpress/i.test(k)) localStorage.removeItem(k);
+          }
+        } catch (e) {}
+      };
+      /* clear when leaving → the next entry starts fresh */
+      window.addEventListener('pagehide', wipeBpStorage);
+      window.addEventListener('beforeunload', wipeBpStorage);
+      /* manual override for the current load */
+      if (/[?&]reset=1\b/.test(location.search)) wipeBpStorage();
     } catch (e) { /* never break injection over reset failure */ }
   })();
 
