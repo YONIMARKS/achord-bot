@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.14';
+  var VERSION = '22.5.15';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -132,9 +132,13 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerContainer [class*="lucide-loader" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loader-circle" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="spinner" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loading" i]:not(.bpComposerInputLoader){display:none!important}
-/* v22.5.12 — during "thinking", no spinner (the chat already shows a typing indicator). Make Botpress's composer loader look IDENTICAL to the send button: same orange disc, same left-arrow, static. swapLoaderToArrow() injects SEND_ARROW into it; this just mirrors the send-button box styling and kills the spin. */
-.bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:11px!important;box-sizing:border-box!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;animation:none!important}
-.bpComposerContainer .bpComposerInputLoader path{fill:none!important;stroke:#fff!important;stroke-width:1.4!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+/* v22.5.15 — during "thinking", NO spinner and NO flash. We paint the send-arrow
+   as a CSS background-image on the loader and hide its inner spinner paths, so the
+   identical thin orange arrow appears the instant the loader mounts — CSS applies
+   before first paint, so a spinner can never be shown for even one frame. (The JS
+   swapLoaderToArrow still runs as a harmless fallback; its output is display:none'd.) */
+.bpComposerContainer .bpComposerInputLoader,.bpComposerContainer .lucide-loader.bpComposerInputLoader{background-color:#FF8127!important;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:17px auto!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;box-sizing:border-box!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;animation:none!important}
+.bpComposerContainer .bpComposerInputLoader>*{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
 
