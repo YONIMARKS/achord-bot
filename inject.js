@@ -339,7 +339,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
        icon and wipes our content, which left a stale chevron when closed */
     var svg = icon.querySelector('svg');
     var curVB = svg ? svg.getAttribute('viewBox') : null;
-    var wantVB = isOpen ? '0 0 24 24' : '0 -1.6 33.65 33.7';
+    var wantVB = isOpen ? '0 0 24 24' : '0 0 60 60';
     if (curVB !== wantVB) {
       icon.innerHTML = isOpen ? FAB_CHEVRON : FAB_BOT;
       icon.setAttribute('data-achord-fab', isOpen ? 'open' : 'closed');
@@ -565,13 +565,17 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   /* Poll + observe */
-  var ticks = 0;
-  var iv = setInterval(function () {
-    run();
-    if (++ticks > 600) clearInterval(iv);
-  }, 400);
+  /* poll forever (the old 4-min cap let Botpress restore its default FAB icon
+     once polling stopped). Also observe the webchat shadow root so a Botpress
+     re-render of the FAB icon is re-asserted instantly, not after a poll tick. */
+  setInterval(run, 400);
 
   new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
+  (function attachShadowObserver() {
+    var sh = (typeof getShadow === 'function') ? getShadow() : null;
+    if (!sh) { setTimeout(attachShadowObserver, 300); return; }
+    try { new MutationObserver(function () { syncFabIcon(sh); }).observe(sh, { childList: true, subtree: true }); } catch (e) {}
+  })();
   window.addEventListener('resize', function () {
     var sh = getShadow();
     if (sh) { applyExpand(sh); injectExpandButton(sh); }
