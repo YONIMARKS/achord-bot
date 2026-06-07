@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.13';
+  var VERSION = '22.5.14';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -128,7 +128,7 @@
 .bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:0!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important}
 svg.bpComposerSendButton{padding:11px!important;box-sizing:border-box!important}
 svg.bpComposerSendButton *{stroke:#fff!important}
-svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:1.4!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerContainer [class*="lucide-loader" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loader-circle" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="spinner" i]:not(.bpComposerInputLoader),.bpComposerContainer [class*="loading" i]:not(.bpComposerInputLoader){display:none!important}
