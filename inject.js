@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.3';
+  var VERSION = '22.5.4';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -59,12 +59,15 @@
 .bpMessageBlocksBubble p:last-child{margin-bottom:0!important}
 .bpMessageList [class*="Date"],.bpMessageList [class*="Time"]{color:#A89B85!important;font-size:12px!important;${F}!important}
 .bpComposer,.bpComposerContainer{background:#FFFCF1!important;border:none!important;border-top:1.095px solid #F0E8D8!important;padding:0!important;flex-shrink:0!important;outline:none!important;box-shadow:none!important}
-.bpComposerContainer>div{display:flex!important;direction:ltr!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important;justify-content:flex-end!important}
+.bpComposerContainer>div{display:flex!important;direction:rtl!important;flex-direction:row!important;align-items:center!important;gap:8.758px!important;padding:13.137px 15.326px!important;outline:none!important;box-shadow:none!important;border:none!important}
 .bpComposer:focus-within,.bpComposer *:focus,.bpComposer *:focus-visible,.bpComposerContainer:focus-within,.bpComposerContainer *:focus,.bpComposerContainer *:focus-visible,.bpComposerContainer>div:focus-within{outline:none!important;outline-color:transparent!important;outline-width:0!important;outline-offset:0!important;box-shadow:none!important;border-color:#E8DFCF!important}
-.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:1093.642px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:24.084px!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;order:2!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
+.bpComposerInput,textarea.bpComposerInput{background:#FFF9F4!important;color:#1F1A14!important;border:1.095px solid #E8DFCF!important;border-radius:1093.642px!important;padding:9.853px 15.326px!important;font-size:15.326px!important;direction:rtl!important;text-align:right!important;${F}!important;line-height:24.084px!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;outline:none!important;outline-color:transparent!important;box-shadow:none!important;resize:none!important;min-height:42px!important;max-height:120px!important;overflow-y:auto!important}
 .bpComposerInput:focus,.bpComposerInput:focus-visible,textarea.bpComposerInput:focus{outline:none!important;outline-color:transparent!important;box-shadow:none!important;border:1.095px solid #E8DFCF!important;border-color:#E8DFCF!important;background:#FFF9F4!important}
 .bpComposerInput::placeholder{color:#A89B85!important;font-size:15.326px!important;${F}!important}
-.bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;order:1!important;align-self:center!important;margin:auto 0!important;padding:0!important}
+.bpComposerSendButton{background:#FF8127!important;color:#fff!important;border-radius:1093.642px!important;width:39.411px!important;height:39.411px!important;min-width:39.411px!important;min-height:39.411px!important;flex-shrink:0!important;opacity:1!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;margin:auto 0!important;padding:0!important}
+svg.bpComposerSendButton{padding:11px!important;box-sizing:border-box!important}
+svg.bpComposerSendButton *{stroke:#fff!important}
+svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 .bpComposerSendButton[disabled],.bpComposerSendButton:disabled{background:#E8DFCF!important;opacity:1!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
@@ -232,18 +235,16 @@
 
   function swapSendButton(sh) {
     var sb = sh.querySelector('.bpComposerSendButton');
-    if (!sb || sb.getAttribute('data-v') === '22.5.3') return;
-    var svg = sb.querySelector('svg');
+    if (!sb || sb.getAttribute('data-v') === '22.5.4') return;
+    /* Botpress changed structure: .bpComposerSendButton is now sometimes the
+       SVG itself, sometimes a parent of an SVG. Handle both. */
+    var svg = sb.tagName.toLowerCase() === 'svg' ? sb : sb.querySelector('svg');
     if (!svg) return;
     svg.setAttribute('viewBox', '0 0 17 8');
     svg.setAttribute('fill', 'none');
-    svg.removeAttribute('stroke');
-    svg.removeAttribute('stroke-width');
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     svg.insertAdjacentHTML('beforeend', SEND_ARROW);
-    svg.style.width = '17px';
-    svg.style.height = '8px';
-    sb.setAttribute('data-v', '22.5.3');
+    sb.setAttribute('data-v', '22.5.4');
   }
 
   function swapNativeIcons(sh) {
