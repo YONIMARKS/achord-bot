@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.1';
+  var VERSION = '22.5.2';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -48,10 +48,10 @@
 .bpMessageList,.bpMessageBlocksContainer{background:#FFFCF1!important}
 .bpMessageListViewport{padding-right:28px!important;padding-left:28px!important;gap:15px!important;direction:rtl!important;padding-top:24px!important;padding-bottom:24px!important;justify-content:flex-start!important}
 .bpMessageListContainer{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;scroll-behavior:smooth!important}
-.bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)) .bpMessageBlocksBubble{background:#EC854B!important;color:#fff!important;border:none!important;border-radius:10px!important;border-bottom-left-radius:4px!important;padding:10px 13px!important;max-width:82%!important}
+.bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)) .bpMessageBlocksBubble{background:#EC854B!important;color:#fff!important;border:none!important;border-radius:10px!important;border-bottom-right-radius:4px!important;border-bottom-left-radius:10px!important;padding:10px 13px!important;max-width:82%!important}
 .bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)) .bpMessageBlocksBubble *{color:#fff!important}
 .bpMessageContainer:not(:has(>.bpMessageAvatarContainer)):not(:has(.bpDateSeparator)){justify-content:flex-end!important}
-.bpMessageContainer:has(>.bpMessageAvatarContainer) .bpMessageBlocksBubble{background:#FFF9F4!important;color:#6F5C45!important;border:1px solid #E8DFCF!important;border-radius:10px!important;border-bottom-right-radius:4px!important;padding:10px 13px!important;max-width:82%!important}
+.bpMessageContainer:has(>.bpMessageAvatarContainer) .bpMessageBlocksBubble{background:#FFF9F4!important;color:#6F5C45!important;border:1px solid #E8DFCF!important;border-radius:10px!important;border-bottom-left-radius:4px!important;border-bottom-right-radius:10px!important;padding:10px 13px!important;max-width:82%!important}
 .bpMessageContainer:has(>.bpMessageAvatarContainer) .bpMessageBlocksBubble *{color:#6F5C45!important}
 .bpMessageContainer:has(>.bpMessageAvatarContainer){flex-direction:row!important;justify-content:flex-start!important}
 .bpMessageBlocksBubble,.bpMessageBlocksBubble *{direction:rtl!important;text-align:right!important;unicode-bidi:plaintext!important;${F}!important}
