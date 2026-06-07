@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.17';
+  var VERSION = '22.5.18';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -117,16 +117,16 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* ============================================================ */
   /*  CSS — welcome panel                                         */
   /* ============================================================ */
-  var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:24px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:15px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
-.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:0 18px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
-.achord-wt{font-size:16px;line-height:1.55;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
-.achord-wp{font-size:15px;line-height:1.6;color:#6F5C45;font-weight:400;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+  var WELCOME_CSS = `.achord-w{display:flex;flex-direction:column;align-items:stretch;padding:28.463px 28px 16px;margin:0 -28px;box-sizing:border-box;direction:rtl;${F};gap:12px;background:#FFFCF1;flex-shrink:0;border-radius:0;border-bottom:1px solid #F0E8D8}
+.achord-wtxt{display:flex;flex-direction:column;align-items:stretch;gap:10.947px;padding:0 18px 0 18px;width:100%;box-sizing:border-box;direction:rtl}
+.achord-wt{font-size:14px;line-height:1.564;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
+.achord-wp{font-size:14px;line-height:1.5;color:#6F5C45;font-weight:500;margin:0;text-align:right;direction:rtl;unicode-bidi:plaintext}
 .achord-wsep{width:5px;height:19px;background:#E8B89A;border-radius:1px;align-self:center}
 .achord-ws{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-.achord-ch{font-size:15px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
-.achord-cs{font-size:15px;color:#6F5C45;text-align:center;margin:0;line-height:1.55;max-width:311px;padding:0 20px;box-sizing:border-box}
-.achord-wc{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:6px 46px 4px;direction:rtl;width:100%;box-sizing:border-box}
-.achord-wcb{padding:7px 13px;border:1px solid #FFA768;background:#fff;color:#D6722C;border-radius:999px;font-size:12px;${F};font-weight:500;cursor:pointer;transition:background .15s ease,transform .12s ease,opacity .15s ease;white-space:nowrap}
+.achord-ch{font-size:15.326px;font-weight:700;color:#6F5C45;text-align:center;margin:0;line-height:1.55}
+.achord-cs{font-size:14px;color:#6F5C45;text-align:center;margin:0;line-height:1.55;max-width:311px;padding:0 20px;box-sizing:border-box}
+.achord-wc{display:flex;flex-wrap:wrap;justify-content:center;gap:6.568px;padding:10.947px 46px;direction:rtl;width:100%;box-sizing:border-box}
+.achord-wcb{padding:6px 13.137px;border:1.095px solid #FFA768;background:#fff;color:#D6722C;border-radius:1093.642px;font-size:12.042px;line-height:20.8px;${F};font-weight:500;cursor:pointer;transition:background .15s ease,transform .12s ease,opacity .15s ease;white-space:nowrap}
 .achord-wcb:hover:not(.achord-wcb-selected):not(.achord-wcb-disabled){background:#FFF4EB}
 .achord-wcb:active{transform:scale(.96)}
 .achord-wcb-selected{background:#FF8127!important;color:#fff!important;border-color:#FF8127!important;cursor:default!important;pointer-events:none}
