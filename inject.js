@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.7';
+  var VERSION = '22.5.8';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -112,7 +112,7 @@
 svg.bpComposerSendButton{padding:11px!important;box-sizing:border-box!important}
 svg.bpComposerSendButton *{stroke:#fff!important}
 svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-width:2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-.bpComposerSendButton[disabled],.bpComposerSendButton:disabled{background:#E8DFCF!important;opacity:1!important}
+.bpComposerSendButton[disabled],.bpComposerSendButton:disabled,.bpComposerSendButton[aria-disabled="true"]{background:#FF8127!important;opacity:.45!important;display:flex!important;visibility:visible!important;position:absolute!important;left:15.326px!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;pointer-events:none!important}
 .bpComposerVoiceButton,.bpComposerContainer [class*="Voice" i],.bpComposerContainer [class*="Mic" i],.bpComposerContainer svg[aria-label*="Voice" i],.bpComposerContainer svg[aria-label*="Mic" i]{display:none!important}
 .bpComposerFooter,[class*="ComposerFooter"]{display:none!important}
 [class*="ScrollToBottom" i],[aria-label*="scroll" i]{right:auto!important;left:14px!important;bottom:78px!important;background:rgba(255,255,255,.85)!important;color:#A89B85!important;border:1px solid #E8DFCF!important;width:26px!important;height:26px!important;border-radius:50%!important;opacity:.6!important;box-shadow:0 2px 6px rgba(73,73,73,.08)!important}`;
