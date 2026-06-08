@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.28';
+  var VERSION = '22.5.29';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -323,60 +323,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     swapLoaderToArrow(sh);
   }
 
-  /* ============================================================ */
-  /*  v22.5.25 — contextual concept images (Figma 1529-18710).     */
-  /*  The first time a bot message introduces a model concept, we  */
-  /*  drop its image into the bubble corner (88px, rounded, per    */
-  /*  Figma). One image per concept per conversation, max one per  */
-  /*  message — subtle, never overloads.                           */
-  /* ============================================================ */
-  var CONCEPT_IMG_BASE = 'https://cdn.jsdelivr.net/gh/YONIMARKS/achord-bot@v' + VERSION + '/bot-images/';
-  var CONCEPTS = [
-    { img: 'tashtit.png',  re: /תשתית/ },
-    { img: 'hoganut.png',  re: /הוגנות/ },
-    { img: 'savlanut.png', re: /סובלנות/ },
-    { img: 'shaychut.png', re: /שייכות/ },
-    { img: 'kol.png',      re: /תחושת קול|הקול של|חופש הקול|זכות הקול|\bקול\b/ },
-    { img: 'shlav1.png',   re: /שלב\s*1|שלב\s*ראשון|השלב\s*הראשון/ },
-    { img: 'shlav2.png',   re: /שלב\s*2|שלב\s*שני|השלב\s*השני/ },
-    { img: 'shlav3.png',   re: /שלב\s*3|שלב\s*שלישי|השלב\s*השלישי/ }
-  ];
-  var CONCEPT_CSS = '.achord-concept-img{float:right;width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid #E7DECF;margin:2px 0 8px 12px;shape-outside:inset(0 round 10px)}';
-  var __acShownConcepts = {};
-  function acAddConceptImg(bubble, img) {
-    var el = document.createElement('img');
-    el.className = 'achord-concept-img';
-    el.src = CONCEPT_IMG_BASE + img;
-    el.setAttribute('alt', '');
-    bubble.insertBefore(el, bubble.firstChild);
-  }
-  function injectConceptImages(sh) {
-    var bubbles;
-    try { bubbles = sh.querySelectorAll('.bpMessageContainer:has(> .bpMessageAvatarContainer) .bpMessageBlocksBubble'); }
-    catch (e) { return; }
-    for (var i = 0; i < bubbles.length; i++) {
-      var b = bubbles[i];
-      var assigned = b.getAttribute('data-ac-concept');
-      if (assigned) {
-        if (!b.querySelector('.achord-concept-img')) acAddConceptImg(b, assigned);
-        continue;
-      }
-      if (b.getAttribute('data-ac-seen')) continue;
-      b.setAttribute('data-ac-seen', '1');
-      var txt = b.textContent || '';
-      for (var j = 0; j < CONCEPTS.length; j++) {
-        var c = CONCEPTS[j];
-        if (__acShownConcepts[c.img]) continue;
-        if (c.re.test(txt)) {
-          __acShownConcepts[c.img] = true;
-          b.setAttribute('data-ac-concept', c.img);
-          acAddConceptImg(b, c.img);
-          break;
-        }
-      }
-    }
-  }
-
 
   /* ============================================================ */
   /*  Welcome panel — injected outside mlc, removed on first      */
@@ -579,8 +525,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     injectExpandButton(sh);
     swapNativeIcons(sh);
     pinSendButton(sh);
-    injectStyle(sh, 'ac-v22-concept', CONCEPT_CSS);
-    injectConceptImages(sh);
     manageWelcome(sh);
     localize(sh);
     localize(document.body);
