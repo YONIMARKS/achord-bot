@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.27';
+  var VERSION = '22.5.28';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -46,10 +46,7 @@
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
 .bpFabWrapper.bpFabWrapper{bottom:80px!important;right:24px!important;left:auto!important;z-index:9999!important}
 .bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
-.bpFab.bpFab.achord-fab-open{background:#A89F8E!important;box-shadow:0 6px 16px rgba(73,73,73,.16)!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
-.bpFabIcon{background:none!important;background-image:none!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;width:100%!important;height:100%!important}
-.bpFabIcon svg{display:block}
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
@@ -67,7 +64,7 @@
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important;overflow:visible!important}
 .achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:3!important}
 .achord-expand-btn:hover{background:rgba(255,252,241,.42)!important}
-@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 160px)!important;bottom:120px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}.bpFabWrapper.bpFabWrapper{bottom:104px!important}.bpFab.bpFab{width:46px!important;height:46px!important;opacity:.3!important}.bpFab.bpFab:active,.bpFab.bpFab.achord-fab-open{opacity:1!important}}`;
+@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 160px)!important;bottom:120px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}.bpFabWrapper.bpFabWrapper{bottom:104px!important}.bpFab.bpFab{width:46px!important;height:46px!important;opacity:.3!important}.bpFab.bpFab:active{opacity:1!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
@@ -327,12 +324,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   /* ============================================================ */
-  /*  FAB icon toggle — chevron-down when chat open, bot when closed */
-  /* ============================================================ */
-  var FAB_BOT = '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><rect width="60" height="60" rx="30" fill="#FF8127"/><path d="M50.5354 29.2738C50.4871 28.7047 50.1494 28.2841 49.7393 27.9625C49.1 27.6656 48.7622 27.6409 48.0747 27.6285C47.8696 27.6285 47.0253 27.6656 46.8926 27.5914V27.48L46.9046 27.0842C46.8805 25.0678 45.9638 22.3092 44.9988 20.701C43.5634 18.3259 41.4284 16.4703 38.9074 15.4064C38.3646 15.1961 37.8218 15.0106 37.2669 14.8497C37.0015 14.7879 36.8085 14.7632 36.5432 14.6766L36.4949 14.6518C36.0124 14.4415 32.8883 14.392 32.1404 14.3797C32.2007 13.9838 32.2007 12.4994 32.1525 12.0911C32.249 11.9674 32.454 11.819 32.5867 11.7076C33.0933 11.2994 33.3949 10.9036 33.6603 10.2974C34.0704 9.35724 34.0824 8.281 33.7206 7.3161C33.2863 6.2275 32.5867 5.65845 31.5494 5.20075L31.3805 5.13889C30.6206 4.96571 30.3793 4.96571 29.6073 5.07704C29.0404 5.20075 28.763 5.32445 28.2564 5.60897C27.9186 5.88112 27.4965 6.2275 27.2673 6.59861C26.821 7.3161 26.6159 8.04596 26.6159 8.76345C26.6159 9.91391 27.1708 11.0149 28.184 11.8685C28.3287 11.9922 28.4252 12.0293 28.4373 12.2272C28.5097 12.9447 28.4373 13.6746 28.4856 14.392C27.7859 14.4044 25.3976 14.392 24.8186 14.59C23.3953 14.7013 21.3326 15.5054 20.1023 16.26H20.0902C16.9781 18.1898 14.9758 20.8371 14.0711 24.5235C13.842 25.4637 13.6972 26.676 13.7575 27.6409C12.5995 27.6285 11.0073 27.3811 10.3318 28.5563C10.2836 28.6305 10.2112 28.8037 10.163 28.8779C9.93378 29.3851 9.95791 35.2364 10.163 35.8054H10.175C10.3077 36.2507 10.5972 36.6219 10.9953 36.8445C11.14 36.9311 11.2365 36.9559 11.4054 36.9806H11.4174C11.9241 37.1662 13.1785 37.1291 13.7093 37.0672C13.6972 38.094 13.649 39.0217 13.8902 40.0361C13.8902 40.432 14.5295 41.3598 14.8069 41.6443C15.7357 42.5968 16.7972 42.77 18.0638 42.77H40.6323C42.3813 42.77 44.456 43.0545 45.7949 41.6567C46.8805 40.5186 46.8926 39.2939 46.9046 37.7971V37.0796C47.3871 37.1167 48.5572 37.1414 49.0155 37.0425C50.3424 36.9064 50.6198 35.4838 50.5836 34.3704C50.5354 32.6757 50.6681 30.9562 50.5354 29.2738ZM19.0046 26.7131H19.0167C19.0167 26.7131 18.9805 26.7378 18.9684 26.7626C18.9805 26.7378 18.9925 26.7254 19.0046 26.7131ZM24.5774 34.3828C24.0949 34.7168 23.54 34.9642 22.961 35.0879C22.6474 35.1498 22.3338 35.1869 22.0202 35.1869C21.0914 35.1869 20.1747 34.9024 19.4027 34.3457C18.498 33.7024 17.8466 32.7499 17.5692 31.6489C17.3038 30.585 17.4003 29.4593 17.8587 28.4697C18.5101 27.0594 19.8007 26.0574 21.3206 25.8224C21.5618 25.7853 21.791 25.7729 22.0202 25.7729C23.8898 25.7729 25.5906 26.9234 26.2902 28.7542C27.0743 30.8077 26.3626 33.1457 24.5774 34.3828ZM28.4976 11.6829C28.4976 11.6829 28.4614 11.6829 28.4494 11.7076C28.4614 11.6829 28.4856 11.6829 28.4976 11.6705V11.6829ZM32.0198 12.3509V12.3138C32.0198 12.3138 32.0198 12.3138 32.0319 12.2891C32.0198 12.3014 32.0198 12.3262 32.0198 12.3509ZM35.9762 34.6178C35.9762 34.6178 35.9762 34.6055 35.9642 34.6055H35.9762C35.9762 34.6055 36.0365 34.5807 36.0607 34.5807C36.0365 34.5931 36.0124 34.6055 35.9762 34.6178ZM42.1762 33.4179C42.1159 33.4797 42.0556 33.554 41.9953 33.6282C41.1992 34.5312 40.0895 35.0879 38.9074 35.1745C38.5334 35.1992 38.1595 35.1745 37.7976 35.1127C37.5443 35.0755 37.291 35.0013 37.0498 34.9147C36.7844 34.8158 36.519 34.6921 36.2657 34.5436C35.4334 34.0488 34.77 33.2818 34.384 32.3788C34.3116 32.218 34.2513 32.0571 34.2031 31.884C33.7688 30.449 34.0221 28.8903 34.8906 27.678C35.5661 26.7254 36.5673 26.0822 37.6891 25.8471C39.5828 25.4637 41.5128 26.3296 42.514 28.0244C43.5151 29.7191 43.3825 31.8716 42.1762 33.4179Z" fill="#F8F8F8" fill-opacity="0.53"/></svg>';
-  var FAB_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;color:#fff"><polyline points="6 9 12 15 18 9"/></svg>';
-
-  /* ============================================================ */
   /*  v22.5.25 — contextual concept images (Figma 1529-18710).     */
   /*  The first time a bot message introduces a model concept, we  */
   /*  drop its image into the bubble corner (88px, rounded, per    */
@@ -386,27 +377,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     }
   }
 
-  function syncFabIcon(sh) {
-    var icon = sh.querySelector('.bpFabIcon');
-    var wc = sh.querySelector('.bpWebchat') || sh.querySelector('.bpFABWebchat');
-    if (!icon || !wc) return;
-    var isOpen = wc.classList.contains('bpOpen');
-    /* re-assert by the rendered viewBox, not a flag — Botpress re-renders the
-       icon and wipes our content, which left a stale chevron when closed */
-    var svg = icon.querySelector('svg');
-    var curVB = svg ? svg.getAttribute('viewBox') : null;
-    var wantVB = isOpen ? '0 0 24 24' : '0 0 60 60';
-    if (curVB !== wantVB) {
-      icon.innerHTML = isOpen ? FAB_CHEVRON : FAB_BOT;
-      icon.setAttribute('data-achord-fab', isOpen ? 'open' : 'closed');
-    }
-    /* when the chat is open, mute the FAB to grey so it doesn't pull focus */
-    var fab = sh.querySelector('.bpFab');
-    if (fab) {
-      if (isOpen) fab.classList.add('achord-fab-open');
-      else fab.classList.remove('achord-fab-open');
-    }
-  }
 
   /* ============================================================ */
   /*  Welcome panel — injected outside mlc, removed on first      */
@@ -609,7 +579,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     injectExpandButton(sh);
     swapNativeIcons(sh);
     pinSendButton(sh);
-    syncFabIcon(sh);
     injectStyle(sh, 'ac-v22-concept', CONCEPT_CSS);
     injectConceptImages(sh);
     manageWelcome(sh);
@@ -623,17 +592,11 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   /* Poll + observe */
-  /* poll forever (the old 4-min cap let Botpress restore its default FAB icon
-     once polling stopped). Also observe the webchat shadow root so a Botpress
-     re-render of the FAB icon is re-asserted instantly, not after a poll tick. */
+  /* poll + observe the page so styles/avatars re-assert after Botpress re-renders.
+     FAB icon left as Botpress default (speech bubble) — custom icon hack removed in v22.5.28. */
   setInterval(run, 400);
 
   new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
-  (function attachShadowObserver() {
-    var sh = (typeof getShadow === 'function') ? getShadow() : null;
-    if (!sh) { setTimeout(attachShadowObserver, 300); return; }
-    try { new MutationObserver(function () { syncFabIcon(sh); }).observe(sh, { childList: true, subtree: true }); } catch (e) {}
-  })();
   window.addEventListener('resize', function () {
     var sh = getShadow();
     if (sh) { applyExpand(sh); injectExpandButton(sh); }
