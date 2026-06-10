@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.29';
+  var VERSION = '22.5.31';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -64,7 +64,25 @@
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important;overflow:visible!important}
 .achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:3!important}
 .achord-expand-btn:hover{background:rgba(255,252,241,.42)!important}
-@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 160px)!important;bottom:120px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}.bpFabWrapper.bpFabWrapper{bottom:104px!important}.bpFab.bpFab{width:46px!important;height:46px!important;opacity:.3!important}.bpFab.bpFab:active{opacity:1!important}}`;
+@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 180px)!important;bottom:140px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}
+/* v22.5.30 — FAB at full opacity, positioned above the site's sticky bottom nav.
+   Uses safe-area-inset-bottom so iOS notch + nav don't overlap. The user can drag
+   to override; in that case the JS sets inline top/left and we drop the !important
+   defaults via the [data-ac-dragged] attribute. */
+.bpFabWrapper.bpFabWrapper{bottom:calc(env(safe-area-inset-bottom,0px) + 110px)!important;right:18px!important;left:auto!important;touch-action:none!important}
+.bpFabWrapper.bpFabWrapper[data-ac-dragged="1"]{bottom:auto!important;right:auto!important}
+.bpFab.bpFab{width:40px!important;height:40px!important;opacity:1!important;touch-action:none!important;-webkit-user-select:none!important;user-select:none!important}
+/* Hide the FAB while the chat is open on mobile — closing happens by tapping the
+   backdrop. We keep the native Botpress Close icon as a fallback (un-hide on mobile
+   when open, in case the backdrop tap is somehow swallowed). The class toggle is
+   set on the wrapper by JS (syncBotOpenState) because body lives outside this
+   shadow tree and can't be reached from shadow CSS. */
+.bpFabWrapper.bpFabWrapper.achord-hide-fab{opacity:0!important;pointer-events:none!important;transform:scale(.85)!important;transition:opacity .18s ease,transform .18s ease!important}
+.bpFabWrapper.bpFabWrapper{transition:opacity .18s ease,transform .18s ease!important}
+.bpWebchat.bpOpen .bpHeaderContentActionsIcons[aria-label*="Close" i],.bpFABWebchat.bpOpen .bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important}
+/* Backdrop: blurred dim layer under the chat while it's open. Tap = close. */
+.achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(28,18,8,.18)!important;-webkit-backdrop-filter:blur(6px) saturate(1.1)!important;backdrop-filter:blur(6px) saturate(1.1)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
+.achord-mobile-backdrop.is-open{opacity:1!important;pointer-events:auto!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
@@ -462,6 +480,195 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   /* ============================================================ */
+  /*  v22.5.30 — Mobile FAB drag + backdrop + bot-open state      */
+  /* ============================================================ */
+  var FAB_POS_KEY = 'achord-fab-pos-v22';
+  var FAB_DRAG_THRESHOLD = 5;   /* px; below this counts as a tap, not a drag */
+  var FAB_EDGE_GAP = 12;        /* px from screen edge when snapping */
+  var FAB_BOTTOM_RESERVE = 110; /* px reserved at bottom for site sticky nav */
+  var FAB_TOP_RESERVE = 16;     /* px reserved at top */
+
+  function readFabPos() {
+    try {
+      var raw = localStorage.getItem(FAB_POS_KEY);
+      if (!raw) return null;
+      var p = JSON.parse(raw);
+      if (typeof p.top !== 'number' || typeof p.left !== 'number') return null;
+      return p;
+    } catch (e) { return null; }
+  }
+  function writeFabPos(p) {
+    try { localStorage.setItem(FAB_POS_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+
+  function clampFabPos(left, top, w, h) {
+    var maxLeft = window.innerWidth - w - FAB_EDGE_GAP;
+    var maxTop = window.innerHeight - h - FAB_BOTTOM_RESERVE;
+    return {
+      left: Math.max(FAB_EDGE_GAP, Math.min(maxLeft, left)),
+      top: Math.max(FAB_TOP_RESERVE, Math.min(maxTop, top))
+    };
+  }
+
+  function snapHorizontal(left, w) {
+    /* snap to whichever side is closer horizontally; keep vertical as-is */
+    var center = left + w / 2;
+    return center < window.innerWidth / 2
+      ? FAB_EDGE_GAP
+      : window.innerWidth - w - FAB_EDGE_GAP;
+  }
+
+  function applyFabPos(wrapper, pos) {
+    wrapper.setAttribute('data-ac-dragged', '1');
+    var s = wrapper.style;
+    s.setProperty('top', pos.top + 'px', 'important');
+    s.setProperty('left', pos.left + 'px', 'important');
+    s.setProperty('right', 'auto', 'important');
+    s.setProperty('bottom', 'auto', 'important');
+  }
+
+  function restoreFabPosIfAny(wrapper) {
+    if (!isMobile()) return;
+    var pos = readFabPos();
+    if (!pos) return;
+    var rect = wrapper.getBoundingClientRect();
+    var clamped = clampFabPos(pos.left, pos.top, rect.width || 50, rect.height || 50);
+    applyFabPos(wrapper, clamped);
+  }
+
+  function setupFabDrag(sh) {
+    if (!isMobile()) return;
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (!wrapper) return;
+    /* Re-assert saved position every tick — Botpress occasionally re-renders the
+       wrapper or wipes inline styles, and we don't want the FAB to snap back to
+       the default corner mid-session. applyFabPos is idempotent. */
+    restoreFabPosIfAny(wrapper);
+    if (wrapper.getAttribute('data-ac-drag-init') === '1') return;
+    wrapper.setAttribute('data-ac-drag-init', '1');
+
+    var dragging = false;
+    var moved = false;
+    var startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    var suppressClickUntil = 0;
+
+    function onPointerDown(e) {
+      /* Don't initiate drag while the bot is open — the FAB is hidden then.   */
+      if (document.body.classList.contains('achord-bot-open')) return;
+      /* Only primary button / single touch. */
+      if (e.button !== undefined && e.button !== 0) return;
+      var rect = wrapper.getBoundingClientRect();
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      try { wrapper.setPointerCapture && wrapper.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+
+    function onPointerMove(e) {
+      if (!dragging) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      if (!moved && (Math.abs(dx) > FAB_DRAG_THRESHOLD || Math.abs(dy) > FAB_DRAG_THRESHOLD)) {
+        moved = true;
+      }
+      if (!moved) return;
+      e.preventDefault();
+      var rect = wrapper.getBoundingClientRect();
+      var next = clampFabPos(startLeft + dx, startTop + dy, rect.width, rect.height);
+      applyFabPos(wrapper, next);
+    }
+
+    function onPointerUp(e) {
+      if (!dragging) return;
+      dragging = false;
+      try { wrapper.releasePointerCapture && wrapper.releasePointerCapture(e.pointerId); } catch (err) {}
+      if (!moved) return; /* tap → let Botpress open the chat */
+      var rect = wrapper.getBoundingClientRect();
+      var snappedLeft = snapHorizontal(rect.left, rect.width);
+      var clamped = clampFabPos(snappedLeft, rect.top, rect.width, rect.height);
+      applyFabPos(wrapper, clamped);
+      writeFabPos(clamped);
+      /* swallow the synthetic click that follows a drag */
+      suppressClickUntil = Date.now() + 350;
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    /* Pointer events handle touch + mouse in one path. Capture so we never lose
+       drag if the finger leaves the FAB mid-stroke. */
+    wrapper.addEventListener('pointerdown', onPointerDown, true);
+    wrapper.addEventListener('pointermove', onPointerMove, true);
+    wrapper.addEventListener('pointerup', onPointerUp, true);
+    wrapper.addEventListener('pointercancel', onPointerUp, true);
+
+    /* Block the post-drag click from reaching Botpress (would open/close the chat). */
+    wrapper.addEventListener('click', function (e) {
+      if (Date.now() < suppressClickUntil) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
+    }, true);
+  }
+
+  /* ============================================================ */
+  /*  Backdrop + bot-open state (mobile)                          */
+  /* ============================================================ */
+  function ensureBackdrop(sh) {
+    var bd = sh.querySelector('.achord-mobile-backdrop');
+    if (bd) return bd;
+    bd = document.createElement('div');
+    bd.className = 'achord-mobile-backdrop';
+    bd.setAttribute('aria-hidden', 'true');
+    /* Tap on backdrop → close the chat by clicking the FAB (Botpress's own toggle). */
+    var close = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var fab = sh.querySelector('.bpFab');
+      if (fab) { try { fab.click(); } catch (err) {} }
+    };
+    bd.addEventListener('click', close);
+    bd.addEventListener('touchend', close, { passive: false });
+    /* Insert as a sibling of the webchat so z-index ordering inside the shadow
+       root puts it under the chat (z-index 9998 vs chat 10000). */
+    var webchat = sh.querySelector('.bpWebchat') || sh.querySelector('.bpFABWebchat');
+    if (webchat && webchat.parentNode) webchat.parentNode.insertBefore(bd, webchat);
+    else sh.appendChild(bd);
+    return bd;
+  }
+
+  function syncBotOpenState(sh) {
+    var bot = sh.querySelector('.bpWebchat, .bpFABWebchat');
+    if (!bot) return;
+    var isOpen = bot.classList.contains('bpOpen');
+    /* Body class — for any future page-level styling (e.g. backdrop on body). */
+    document.body.classList.toggle('achord-bot-open', isOpen);
+    /* Toggle the hide-FAB class on the wrapper itself, since shadow CSS can't
+       reference document.body as an ancestor. Mobile only. */
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (wrapper) {
+      wrapper.classList.toggle('achord-hide-fab', isOpen && isMobile());
+    }
+    if (!isMobile()) {
+      var existing = sh.querySelector('.achord-mobile-backdrop');
+      if (existing) existing.classList.remove('is-open');
+      return;
+    }
+    var bd = ensureBackdrop(sh);
+    if (isOpen) {
+      /* defer one frame so the transition runs from 0 → 1 */
+      if (!bd.classList.contains('is-open')) {
+        requestAnimationFrame(function () { bd.classList.add('is-open'); });
+      }
+    } else {
+      bd.classList.remove('is-open');
+    }
+  }
+
+  /* ============================================================ */
   /*  Main run loop                                               */
   /* ============================================================ */
   function pinSendButton(sh) {
@@ -526,6 +733,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     swapNativeIcons(sh);
     pinSendButton(sh);
     manageWelcome(sh);
+    setupFabDrag(sh);
+    syncBotOpenState(sh);
     localize(sh);
     localize(document.body);
     /* If we marked the session as needing reset, attempt the in-app restart
@@ -543,7 +752,28 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('resize', function () {
     var sh = getShadow();
-    if (sh) { applyExpand(sh); injectExpandButton(sh); }
+    if (!sh) return;
+    applyExpand(sh);
+    injectExpandButton(sh);
+    /* On resize, re-clamp the dragged FAB so it doesn't end up off-screen
+       (e.g. orientation flip on mobile). Desktop: clear any mobile drag state. */
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (!wrapper) return;
+    if (isMobile()) {
+      if (wrapper.getAttribute('data-ac-dragged') === '1') {
+        var rect = wrapper.getBoundingClientRect();
+        var clamped = clampFabPos(rect.left, rect.top, rect.width, rect.height);
+        applyFabPos(wrapper, clamped);
+        writeFabPos(clamped);
+      }
+    } else {
+      /* leaving mobile → drop the inline drag styles so desktop CSS applies */
+      wrapper.removeAttribute('data-ac-dragged');
+      ['top', 'left', 'right', 'bottom'].forEach(function (p) {
+        wrapper.style.removeProperty(p);
+      });
+    }
+    syncBotOpenState(sh);
   });
 
   /* Mark window for debugging */
