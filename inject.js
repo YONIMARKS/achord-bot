@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.33';
+  var VERSION = '22.5.34';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -44,7 +44,7 @@
   /*  CSS — base (chat structure, header, fab)                    */
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
-.bpFabWrapper.bpFabWrapper{bottom:80px!important;right:24px!important;left:auto!important;z-index:9999!important}
+.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:bottom .2s ease!important}
 .bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
@@ -64,16 +64,16 @@
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important;overflow:visible!important}
 .achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:3!important}
 .achord-expand-btn:hover{background:rgba(255,252,241,.42)!important}
-@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;height:calc(100dvh - 290px)!important;bottom:272px!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:12px!important}.achord-expand-btn{display:none!important}
-/* v22.5.32 — FAB at 56px (matches desktop, no icon scaling issues), fixed position
-   200px from screen bottom. No drag. Visible at all times so a tap on the FAB
-   itself opens/closes the chat (Botpress's native toggle behaviour). The bot panel
-   sits above the FAB (bottom:272px = 200 + 56 + 16 gap) so they never overlap. */
-.bpFabWrapper.bpFabWrapper{bottom:200px!important;right:24px!important;left:auto!important}
+@media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:calc(var(--ac-fab-b,20px) + 70px)!important;height:auto!important;max-height:none!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:calc(var(--ac-fab-b,20px) + 70px)!important}.achord-expand-btn{display:none!important}
+/* v22.5.34 — FAB near the bottom (positionFab keeps it above any sticky bar / the
+   Made-in-Framer badge), full opacity, 56px. While the chat is open the FAB shows
+   a collapse chevron; tapping it closes the chat (Botpress native toggle). */
+.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,20px)!important;right:24px!important;left:auto!important}
 .bpFab.bpFab{width:56px!important;height:56px!important;opacity:1!important}
-/* Backdrop: darker dim + lighter blur for stronger focus on the chat. No tap-to-
-   close — closing is exclusively via the FAB. The backdrop is decorative only. */
-.achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(28,18,8,.50)!important;-webkit-backdrop-filter:blur(3px) saturate(1.05)!important;backdrop-filter:blur(3px) saturate(1.05)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
+.bpFab.achord-fab-open .bpFabIcon>*{opacity:0!important}
+.bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
+/* Backdrop: darker dim + blur for stronger focus. Decorative only (no tap-to-close). */
+.achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(18,11,3,.66)!important;-webkit-backdrop-filter:blur(4px) saturate(1.05)!important;backdrop-filter:blur(4px) saturate(1.05)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
 .achord-mobile-backdrop.is-open{opacity:1!important}}`;
 
   /* ============================================================ */
@@ -164,11 +164,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      "thick idle vs thin thinking" mismatch the user saw). */
   var SEND_ARROW_URI = "data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E";
 
-  /* v22.5.33 — FAB bot icon: exact Figma export (self-contained 60×60 frame with
-     the orange circle as a built-in <rect rx=30>, robot path well inside the frame
-     so it can never clip). Shown when the chat is closed; chevron when open. */
-  var FAB_BOT = '<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><rect width="60" height="60" rx="30" fill="#FF8127"/><path d="M50.5354 29.2738C50.4871 28.7047 50.1494 28.2841 49.7393 27.9625C49.1 27.6656 48.7622 27.6409 48.0747 27.6285C47.8696 27.6285 47.0253 27.6656 46.8926 27.5914V27.48L46.9046 27.0842C46.8805 25.0678 45.9638 22.3092 44.9988 20.701C43.5634 18.3259 41.4284 16.4703 38.9074 15.4064C38.3646 15.1961 37.8218 15.0106 37.2669 14.8497C37.0015 14.7879 36.8085 14.7632 36.5432 14.6766L36.4949 14.6518C36.0124 14.4415 32.8883 14.392 32.1404 14.3797C32.2007 13.9838 32.2007 12.4994 32.1525 12.0911C32.249 11.9674 32.454 11.819 32.5867 11.7076C33.0933 11.2994 33.3949 10.9036 33.6603 10.2974C34.0704 9.35724 34.0824 8.281 33.7206 7.3161C33.2863 6.2275 32.5867 5.65845 31.5494 5.20075L31.3805 5.13889C30.6206 4.96571 30.3793 4.96571 29.6073 5.07704C29.0404 5.20075 28.763 5.32445 28.2564 5.60897C27.9186 5.88112 27.4965 6.2275 27.2673 6.59861C26.821 7.3161 26.6159 8.04596 26.6159 8.76345C26.6159 9.91391 27.1708 11.0149 28.184 11.8685C28.3287 11.9922 28.4252 12.0293 28.4373 12.2272C28.5097 12.9447 28.4373 13.6746 28.4856 14.392C27.7859 14.4044 25.3976 14.392 24.8186 14.59C23.3953 14.7013 21.3326 15.5054 20.1023 16.26H20.0902C16.9781 18.1898 14.9758 20.8371 14.0711 24.5235C13.842 25.4637 13.6972 26.676 13.7575 27.6409C12.5995 27.6285 11.0073 27.3811 10.3318 28.5563C10.2836 28.6305 10.2112 28.8037 10.163 28.8779C9.93378 29.3851 9.95791 35.2364 10.163 35.8054H10.175C10.3077 36.2507 10.5972 36.6219 10.9953 36.8445C11.14 36.9311 11.2365 36.9559 11.4054 36.9806H11.4174C11.9241 37.1662 13.1785 37.1291 13.7093 37.0672C13.6972 38.094 13.649 39.0217 13.8902 40.0361C13.8902 40.432 14.5295 41.3598 14.8069 41.6443C15.7357 42.5968 16.7972 42.77 18.0638 42.77H40.6323C42.3813 42.77 44.456 43.0545 45.7949 41.6567C46.8805 40.5186 46.8926 39.2939 46.9046 37.7971V37.0796C47.3871 37.1167 48.5572 37.1414 49.0155 37.0425C50.3424 36.9064 50.6198 35.4838 50.5836 34.3704C50.5354 32.6757 50.6681 30.9562 50.5354 29.2738ZM24.5774 34.3828C24.0949 34.7168 23.54 34.9642 22.961 35.0879C22.6474 35.1498 22.3338 35.1869 22.0202 35.1869C21.0914 35.1869 20.1747 34.9024 19.4027 34.3457C18.498 33.7024 17.8466 32.7499 17.5692 31.6489C17.3038 30.585 17.4003 29.4593 17.8587 28.4697C18.5101 27.0594 19.8007 26.0574 21.3206 25.8224C21.5618 25.7853 21.791 25.7729 22.0202 25.7729C23.8898 25.7729 25.5906 26.9234 26.2902 28.7542C27.0743 30.8077 26.3626 33.1457 24.5774 34.3828ZM42.1762 33.4179C42.1159 33.4797 42.0556 33.554 41.9953 33.6282C41.1992 34.5312 40.0895 35.0879 38.9074 35.1745C38.5334 35.1992 38.1595 35.1745 37.7976 35.1127C37.5443 35.0755 37.291 35.0013 37.0498 34.9147C36.7844 34.8158 36.519 34.6921 36.2657 34.5436C35.4334 34.0488 34.77 33.2818 34.384 32.3788C34.3116 32.218 34.2513 32.0571 34.2031 31.884C33.7688 30.449 34.0221 28.8903 34.8906 27.678C35.5661 26.7254 36.5673 26.0822 37.6891 25.8471C39.5828 25.4637 41.5128 26.3296 42.514 28.0244C43.5151 29.7191 43.3825 31.8716 42.1762 33.4179Z" fill="#F8F8F8" fill-opacity="0.78"/></svg>';
-  var FAB_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;color:#fff"><polyline points="6 9 12 15 18 9"/></svg>';
+  /* v22.5.34 — robot FAB icon removed (reverted to Botpress's default bubble).
+     On mobile while the chat is open, BASE_CSS overlays a collapse chevron on the
+     FAB so it reads as "close". Positioning is handled by positionFab(). */
 
   /* ============================================================ */
   /*  Welcome panel content                                       */
@@ -522,6 +520,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (!bot) return;
     var isOpen = bot.classList.contains('bpOpen');
     document.body.classList.toggle('achord-bot-open', isOpen);
+    /* mark the FAB open so the mobile CSS can swap its icon to a collapse chevron */
+    var fab = sh.querySelector('.bpFab');
+    if (fab) fab.classList.toggle('achord-fab-open', isOpen);
     if (!isMobile()) {
       var existing = sh.querySelector('.achord-mobile-backdrop');
       if (existing) existing.classList.remove('is-open');
@@ -588,20 +589,41 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     return true;
   }
 
-  /* FAB icon: show the Figma bot when closed, a chevron when open. Re-asserts by
-     the rendered viewBox so it survives Botpress re-rendering the icon. */
-  function syncFabIcon(sh) {
-    var icon = sh.querySelector('.bpFabIcon');
-    var wc = sh.querySelector('.bpWebchat') || sh.querySelector('.bpFABWebchat');
-    if (!icon || !wc) return;
-    var isOpen = wc.classList.contains('bpOpen');
-    var svg = icon.querySelector('svg');
-    var curVB = svg ? svg.getAttribute('viewBox') : null;
-    var wantVB = isOpen ? '0 0 24 24' : '0 0 60 60';
-    if (curVB !== wantVB) {
-      icon.innerHTML = isOpen ? FAB_CHEVRON : FAB_BOT;
-      icon.setAttribute('data-achord-fab', isOpen ? 'open' : 'closed');
+  /* Position the FAB near the bottom, but lifted above any fixed/sticky bottom
+     element (page nav bar, the "Made in Framer" badge) so it's never hidden and
+     never covers them. Samples the FAB's column from the bottom up. Throttled. */
+  var _lastFabPos = 0;
+  function positionFab(sh) {
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (!wrapper) return;
+    var now = Date.now();
+    if (now - _lastFabPos < 800) return;   /* throttle: bottom bars rarely move */
+    _lastFabPos = now;
+    var vh = window.innerHeight, vw = window.innerWidth;
+    var base = isMobile() ? 20 : 28;   /* "relatively close to the bottom" */
+    var gap = 14;
+    var host = document.getElementById('fab-root');
+    var fabLeft = vw - 24 - 70, fabRight = vw - 8;   /* FAB column (right side) */
+    var topMost = vh, found = false;
+    /* scan for fixed/sticky bottom-anchored elements that overlap the FAB's column
+       (a page nav bar, the Made-in-Framer badge). Direct scan, not elementsFromPoint,
+       because the badge uses pointer-events:none which elementsFromPoint skips. */
+    var els = document.querySelectorAll('body *');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el === host || (host && host.contains(el))) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
+      if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
+      var r = el.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0 || r.height > vh * 0.5) continue;
+      if (r.bottom < vh - 40) continue;                 /* not anchored to the bottom */
+      if (r.right < fabLeft || r.left > fabRight) continue; /* not under the FAB */
+      if (r.top < topMost) { topMost = r.top; found = true; }
     }
+    var bottom = base;
+    if (found) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
+    wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
   }
 
   function run() {
@@ -616,7 +638,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     injectAvatar(sh);
     injectExpandButton(sh);
     swapNativeIcons(sh);
-    syncFabIcon(sh);
+    positionFab(sh);
     pinSendButton(sh);
     manageWelcome(sh);
     syncBotOpenState(sh);
