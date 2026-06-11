@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.35';
+  var VERSION = '22.5.37';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -74,7 +74,11 @@
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
 /* Backdrop: darker dim + blur for stronger focus. Decorative only (no tap-to-close). */
 .achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(18,11,3,.66)!important;-webkit-backdrop-filter:blur(4px) saturate(1.05)!important;backdrop-filter:blur(4px) saturate(1.05)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
-.achord-mobile-backdrop.is-open{opacity:1!important}}`;
+.achord-mobile-backdrop.is-open{opacity:1!important}
+/* v22.5.37 — restore the native Botpress Close icon (X) in the header on mobile.
+   Desktop still uses the FAB to toggle; mobile users get an explicit X button. */
+.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important}
+.bpHeaderContentActionsIcons[aria-label*="Close" i]:hover{background:rgba(255,255,255,.36)!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
@@ -191,7 +195,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* ============================================================ */
   /*  Expand state                                                */
   /* ============================================================ */
-  var EXP_KEY = 'achord-exp-v22';
+  /* v22.5.37 — storage key bumped from -v22 to -v23 so anyone with a stale '0'
+     from a pre-v22.5.35 session (when default was collapsed) starts fresh with the
+     new "expanded by default" behavior. Users who actively collapse in v23 keep it. */
+  var EXP_KEY = 'achord-exp-v23';
   var MOBILE_W = 480;
   /* v22.5.35 — default to EXPANDED on desktop (taller bot, less scrolling).
      A stored '0' (user explicitly collapsed) is preserved; '1' or no value -> expanded. */
@@ -260,7 +267,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
        Expanded → show "collapse" arrows pointing in; default → show "expand" arrows out. */
     if (!_expandBtn) return;
     _expandBtn.innerHTML = exp ? COLLAPSE_IN_SVG : EXPAND_OUT_SVG;
-    _expandBtn.title = exp ? 'הקטנה' : 'הגדלה';
+    /* v22.5.36 — no title attribute → no hover tooltip text. Aria-label stays for a11y. */
+    _expandBtn.removeAttribute('title');
     _expandBtn.setAttribute('aria-label', exp ? 'הקטנה' : 'הגדלה');
     _expandBtn.style.transform = '';
   }
@@ -348,7 +356,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   function swapNativeIcons(sh) {
-    /* close swap removed in v22.1 — close button hidden, FAB toggles instead */
+    /* v22.5.37 — close swap re-enabled. The button is hidden on desktop (FAB toggles)
+       but visible on mobile via the @media override. CLOSE_PATH uses ~7-16 coord range. */
+    var close = sh.querySelector('[aria-label*="Close" i]');
+    if (close && close.tagName.toLowerCase() === 'svg') swapIconSvg(close, '6 6 12 12', CLOSE_PATH);
     var restart = sh.querySelector('[aria-label*="Restart" i]');
     if (restart && restart.tagName.toLowerCase() === 'svg') swapIconSvg(restart, '1 1.5 13 12', RESTART_PATH);
     swapSendButton(sh);
@@ -655,6 +666,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     applyExpand(sh);
     injectAvatar(sh);
     injectExpandButton(sh);
+    updateExpandGlyph();  /* v22.5.37 — re-assert icon every tick; safe if button is null */
     swapNativeIcons(sh);
     positionFab(sh);
     pinSendButton(sh);
