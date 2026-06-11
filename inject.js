@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.38';
+  var VERSION = '22.5.39';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -55,9 +55,10 @@
 .bpHeaderContentContainer{display:flex!important;direction:rtl!important;align-items:center!important;gap:5.5px!important;padding:15.4px 39.4px 15.4px 17.6px!important;background:transparent!important;border:none!important;width:100%!important;box-sizing:border-box!important}
 .bpHeaderContentTitle{font-size:17.6px!important;font-weight:600!important;color:var(--ac-id)!important;${F}!important;text-align:right!important;flex:1!important;margin:0!important;line-height:1.37!important;order:2!important;padding:0!important}
 .bpHeaderContentTitle::after,.bpHeaderAvatar,.bpHeaderContentAvatarContainer,.bpHeaderContentDescription,.bpMessageListMarqueeContainer,.bpHeaderConversationHistoryButton{display:none!important}
-.bpHeaderContentActionsContainer{display:flex!important;direction:rtl!important;gap:4px!important;align-items:center!important;order:3!important}
+.bpHeaderContentActionsContainer{display:flex!important;direction:rtl!important;gap:2px!important;align-items:center!important;order:3!important}
 .bpHeaderContentActionsIcons{color:#fff!important;cursor:pointer!important;border-radius:6px!important;width:12px!important;height:12px!important;padding:6px!important;stroke-width:2!important}
-.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:none!important}
+.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important}
+.bpHeaderContentActionsIcons[aria-label*="Close" i]:hover{background:rgba(255,255,255,.36)!important}
 .bpHeaderContentActionsIcons[aria-label*="Restart" i]{width:25px!important;height:25px!important;padding:6px!important;stroke-width:1.8!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important}
 .bpHeaderContentActionsIcons:hover{background:rgba(255,255,255,.22)!important}
 .achord-bot-av{width:41px!important;height:38px!important;background:transparent!important;border:none!important;border-radius:0!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;flex-shrink:0!important;order:1!important;overflow:visible!important}
@@ -74,11 +75,7 @@
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
 /* Backdrop: darker dim + blur for stronger focus. Decorative only (no tap-to-close). */
 .achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(18,11,3,.66)!important;-webkit-backdrop-filter:blur(4px) saturate(1.05)!important;backdrop-filter:blur(4px) saturate(1.05)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
-.achord-mobile-backdrop.is-open{opacity:1!important}
-/* v22.5.37 — restore the native Botpress Close icon (X) in the header on mobile.
-   Desktop still uses the FAB to toggle; mobile users get an explicit X button. */
-.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important}
-.bpHeaderContentActionsIcons[aria-label*="Close" i]:hover{background:rgba(255,255,255,.36)!important}}`;
+.achord-mobile-backdrop.is-open{opacity:1!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
