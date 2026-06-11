@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.39';
+  var VERSION = '22.5.40';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -192,18 +192,15 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* ============================================================ */
   /*  Expand state                                                */
   /* ============================================================ */
-  /* v22.5.37 — storage key bumped from -v22 to -v23 so anyone with a stale '0'
-     from a pre-v22.5.35 session (when default was collapsed) starts fresh with the
-     new "expanded by default" behavior. Users who actively collapse in v23 keep it. */
-  var EXP_KEY = 'achord-exp-v23';
+  /* v22.5.40 — storage key bumped to -v24. Expanded mode is now the *forced*
+     default on every page load — we never read storage on init, only write during
+     the session so toggles persist within the session but reset on refresh. */
+  var EXP_KEY = 'achord-exp-v24';
   var MOBILE_W = 480;
-  /* v22.5.35 — default to EXPANDED on desktop (taller bot, less scrolling).
-     A stored '0' (user explicitly collapsed) is preserved; '1' or no value -> expanded. */
+  /* v22.5.40 — always start expanded. We deliberately skip the localStorage read on
+     init so refresh resets to expanded, no matter what previous toggles set. The write
+     still happens in toggleExpand → session-local memory only. */
   var exp = true;
-  try {
-    var _expStored = localStorage.getItem(EXP_KEY);
-    if (_expStored === '0') exp = false;
-  } catch (e) {}
 
   function isMobile() { return window.innerWidth <= MOBILE_W; }
   function getShadow() {
@@ -367,8 +364,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       while (close.firstChild) close.removeChild(close.firstChild);
       close.insertAdjacentHTML('beforeend', '<polyline points="6 9 12 15 18 9"/>');
       close.setAttribute('data-ac-chev', '1');
-      var closeBtn = close.closest('[aria-label]') || close;
-      try { closeBtn.setAttribute('aria-label', 'כווץ'); } catch (e) {}
+      /* v22.5.40 — leave aria-label as "Close". Changing it to "כווץ" broke the CSS
+         selector .bpHeaderContentActionsIcons[aria-label*="Close" i] that styles the
+         button visible — the rule stopped matching and the button collapsed to 12px. */
     }
     var restart = sh.querySelector('[aria-label*="Restart" i]');
     if (restart && restart.tagName.toLowerCase() === 'svg') swapIconSvg(restart, '1 1.5 13 12', RESTART_PATH);
