@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.37';
+  var VERSION = '22.5.38';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -356,10 +356,23 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   }
 
   function swapNativeIcons(sh) {
-    /* v22.5.37 — close swap re-enabled. The button is hidden on desktop (FAB toggles)
-       but visible on mobile via the @media override. CLOSE_PATH uses ~7-16 coord range. */
+    /* v22.5.38 — close swap renders as a CHEVRON-DOWN (semantically: minimize)
+       instead of an X (close), since tapping doesn't actually destroy the chat —
+       it just collapses it back to the FAB. Stroke-based path; aria-label updated. */
     var close = sh.querySelector('[aria-label*="Close" i]');
-    if (close && close.tagName.toLowerCase() === 'svg') swapIconSvg(close, '6 6 12 12', CLOSE_PATH);
+    if (close && close.tagName.toLowerCase() === 'svg' && close.getAttribute('data-ac-chev') !== '1') {
+      close.setAttribute('viewBox', '0 0 24 24');
+      close.setAttribute('fill', 'none');
+      close.setAttribute('stroke', 'currentColor');
+      close.setAttribute('stroke-width', '2');
+      close.setAttribute('stroke-linecap', 'round');
+      close.setAttribute('stroke-linejoin', 'round');
+      while (close.firstChild) close.removeChild(close.firstChild);
+      close.insertAdjacentHTML('beforeend', '<polyline points="6 9 12 15 18 9"/>');
+      close.setAttribute('data-ac-chev', '1');
+      var closeBtn = close.closest('[aria-label]') || close;
+      try { closeBtn.setAttribute('aria-label', 'כווץ'); } catch (e) {}
+    }
     var restart = sh.querySelector('[aria-label*="Restart" i]');
     if (restart && restart.tagName.toLowerCase() === 'svg') swapIconSvg(restart, '1 1.5 13 12', RESTART_PATH);
     swapSendButton(sh);
