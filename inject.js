@@ -160,6 +160,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  returns to a full circle showing the collapse chevron.       */
   /* ============================================================ */
   var FAB_CSS = `.bpFabWrapper.bpFabWrapper{display:flex!important;flex-direction:column!important;align-items:center!important;filter:drop-shadow(0 8px 22px rgba(255,129,39,.34))}
+.bpFabWrapper .bpUnreadMessage{display:none!important}
 .bpFab.bpFab{box-shadow:none!important;border-radius:0 0 28px 28px!important}
 .bpFab.achord-fab-open.achord-fab-open{border-radius:50%!important}
 .achord-fab-contact{width:56px;height:50px;box-sizing:border-box;background:var(--ac-p);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:28px 28px 0 0;border-bottom:1px solid rgba(255,255,255,.5);transition:background .15s ease}
