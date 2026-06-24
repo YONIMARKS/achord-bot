@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.44';
+  var VERSION = '22.5.45';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -152,6 +152,23 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpContainer{pointer-events:auto!important}`;
 
   /* ============================================================ */
+  /*  CSS — unified FAB capsule (v22.5.45)                         */
+  /*  One orange pill: contact zone (top) + bot/robot FAB (bottom),*/
+  /*  joined by a thin divider. The bot zone is the native Botpress*/
+  /*  FAB (opens chat); the contact zone is our injected element.  */
+  /*  While the chat is open, the contact zone hides and the FAB   */
+  /*  returns to a full circle showing the collapse chevron.       */
+  /* ============================================================ */
+  var FAB_CSS = `.bpFabWrapper.bpFabWrapper{display:flex!important;flex-direction:column!important;align-items:center!important;filter:drop-shadow(0 8px 22px rgba(255,129,39,.34))}
+.bpFab.bpFab{box-shadow:none!important;border-radius:0 0 28px 28px!important}
+.bpFab.achord-fab-open.achord-fab-open{border-radius:50%!important}
+.achord-fab-contact{width:56px;height:50px;box-sizing:border-box;background:var(--ac-p);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:28px 28px 0 0;border-bottom:1px solid rgba(255,255,255,.5);transition:background .15s ease}
+.achord-fab-contact:hover{background:#FF8E40}
+.achord-fab-contact:active{background:#F57A1E}
+.achord-fab-contact svg{width:25px;height:25px;display:block;pointer-events:none}
+body.achord-bot-open .achord-fab-contact{display:none!important}`;
+
+  /* ============================================================ */
   /*  SVG assets — bot avatar (Asset 1), close ✕, restart ⟲, send ← */
   /* ============================================================ */
   var AVATAR_SVG = '<svg viewBox="-2.5 -2.5 38.65 35.55" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:88%;height:88%;display:block"><path fill="currentColor" opacity=".87" d="M33.6,19.62c-.04-.46-.32-.8-.66-1.06-.53-.24-.81-.26-1.38-.27-.17,0-.87.03-.98-.03v-.09s.01-.32.01-.32c-.02-1.63-.78-3.86-1.58-5.16-1.19-1.92-2.96-3.42-5.05-4.28-.45-.17-.9-.32-1.36-.45-.22-.05-.38-.07-.6-.14l-.04-.02c-.4-.17-2.99-.21-3.61-.22.05-.32.05-1.52.01-1.85.08-.1.25-.22.36-.31.42-.33.67-.65.89-1.14.34-.76.35-1.63.05-2.41-.36-.88-.94-1.34-1.8-1.71l-.14-.05c-.63-.14-.83-.14-1.47-.05-.47.1-.7.2-1.12.43h0c-.28.22-.63.5-.82.8-.37.58-.54,1.17-.54,1.75,0,.93.46,1.82,1.3,2.51.12.1.2.13.21.29.06.58,0,1.17.04,1.75-.58.01-2.56,0-3.04.16-1.18.09-2.89.74-3.91,1.35h-.01c-2.58,1.56-4.24,3.7-4.99,6.68-.19.76-.31,1.74-.26,2.52-.96-.01-2.28-.21-2.84.74-.04.06-.1.2-.14.26-.19.41-.17,5.14,0,5.6H.14c.11.36.35.66.68.84.12.07.2.09.34.11h.01c.42.15,1.46.12,1.9.07-.01.83-.05,1.58.15,2.4h0c0,.32.53,1.07.76,1.3.77.77,1.65.91,2.7.91h18.71c1.45,0,3.17.23,4.28-.9.9-.92.91-1.91.92-3.12v-.58c.4.03,1.37.05,1.75-.03,1.1-.11,1.33-1.26,1.3-2.16-.04-1.37.07-2.76-.04-4.12ZM12.08,23.75c-.4.27-.86.47-1.34.57-.26.05-.52.08-.78.08-.77,0-1.53-.23-2.17-.68-.75-.52-1.29-1.29-1.52-2.18-.22-.86-.14-1.77.24-2.57.54-1.14,1.61-1.95,2.87-2.14.2-.03.39-.04.58-.04,1.55,0,2.96.93,3.54,2.41.65,1.66.06,3.55-1.42,4.55ZM26.67,22.97c-.05.05-.1.11-.15.17-.66.73-1.58,1.18-2.56,1.25-.31.02-.62,0-.92-.05-.21-.03-.42-.09-.62-.16-.22-.08-.44-.18-.65-.3-.69-.4-1.24-1.02-1.56-1.75-.06-.13-.11-.26-.15-.4-.36-1.16-.15-2.42.57-3.4.56-.77,1.39-1.29,2.32-1.48h0c1.57-.31,3.17.39,4,1.76.83,1.37.72,3.11-.28,4.36Z"/></svg>';
@@ -180,6 +197,15 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      On mobile while the chat is open, BASE_CSS overlays a collapse chevron on the
      FAB (higher specificity .achord-fab-open) so it reads as "close".
      Positioning is handled by positionFab(). */
+
+  /* v22.5.45 — unified FAB capsule: a "contact" zone is injected above the robot
+     FAB (see FAB_CSS + injectContactZone) so the bot and the contact share one
+     orange pill instead of competing as two separate chat-like circles. The bot
+     icon stays the robot; the contact icon is a message bubble (white).
+     CONTACT_URL is a PLACEHOLDER for the demo — replace with the real contact
+     target (page / mailto / tel) before promoting to the client. */
+  var CONTACT_URL = 'https://www.achord.org.il/';
+  var CONTACT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H9l-4 3.5V16.5H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8.5" cy="11" r="1.1" fill="#fff" stroke="none"/><circle cx="12" cy="11" r="1.1" fill="#fff" stroke="none"/><circle cx="15.5" cy="11" r="1.1" fill="#fff" stroke="none"/></svg>';
 
   /* ============================================================ */
   /*  Welcome panel content                                       */
@@ -304,6 +330,31 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     a.setAttribute('data-v', '22');
     a.innerHTML = AVATAR_SVG;
     hcc.insertBefore(a, hcc.firstChild);
+  }
+
+  /* ============================================================ */
+  /*  Contact zone injection (v22.5.45 — unified FAB capsule)     */
+  /*  Adds a "contact" button above the native bot FAB, inside    */
+  /*  the FAB wrapper, so the two share one orange pill. Re-added  */
+  /*  automatically if Botpress re-renders the wrapper.            */
+  /* ============================================================ */
+  function injectContactZone(sh) {
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (!wrapper) return;
+    if (wrapper.querySelector('.achord-fab-contact')) return;
+    var z = document.createElement('div');
+    z.className = 'achord-fab-contact';
+    z.setAttribute('role', 'button');
+    z.setAttribute('aria-label', 'צור קשר');
+    z.innerHTML = CONTACT_SVG;
+    z.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      try { window.open(CONTACT_URL, '_blank', 'noopener'); } catch (err) {}
+    });
+    /* stop the pointerdown from reaching the FAB / Botpress toggle */
+    z.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+    wrapper.insertBefore(z, wrapper.firstChild);
   }
 
   /* ============================================================ */
@@ -679,8 +730,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     injectStyle(sh, 'ac-v22-msg', MSG_CSS);
     injectStyle(sh, 'ac-v22-welcome-css', WELCOME_CSS);
     injectStyle(sh, 'ac-v22-fix', FIX_CSS);
+    injectStyle(sh, 'ac-v22-fab', FAB_CSS);
     applyExpand(sh);
     injectAvatar(sh);
+    injectContactZone(sh);
     injectExpandButton(sh);
     updateExpandGlyph();  /* v22.5.37 — re-assert icon every tick; safe if button is null */
     swapNativeIcons(sh);
