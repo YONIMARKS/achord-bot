@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.40';
+  var VERSION = '22.5.44';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -47,6 +47,8 @@
 .bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:bottom .2s ease!important}
 .bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
+.bpFab .bpFabIcon>*{opacity:0!important}
+.bpFab .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 24 24' fill%3D'none' stroke%3D'%23ffffff' stroke-width%3D'1.7' stroke-linecap%3D'round' stroke-linejoin%3D'round'%3E%3Crect x%3D'4.5' y%3D'8' width%3D'15' height%3D'11' rx%3D'3'%2F%3E%3Ccircle cx%3D'9' cy%3D'13' r%3D'1.5' fill%3D'%23ffffff' stroke%3D'none'%2F%3E%3Ccircle cx%3D'15' cy%3D'13' r%3D'1.5' fill%3D'%23ffffff' stroke%3D'none'%2F%3E%3Cpath d%3D'M9.5 16.2h5'%2F%3E%3Cpath d%3D'M12 8V5'%2F%3E%3Ccircle cx%3D'12' cy%3D'3.6' r%3D'1.1'%2F%3E%3Cpath d%3D'M3 12.5v3M21 12.5v3'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:28px 28px!important}
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
@@ -57,13 +59,13 @@
 .bpHeaderContentTitle::after,.bpHeaderAvatar,.bpHeaderContentAvatarContainer,.bpHeaderContentDescription,.bpMessageListMarqueeContainer,.bpHeaderConversationHistoryButton{display:none!important}
 .bpHeaderContentActionsContainer{display:flex!important;direction:rtl!important;gap:2px!important;align-items:center!important;order:3!important}
 .bpHeaderContentActionsIcons{color:#fff!important;cursor:pointer!important;border-radius:6px!important;width:12px!important;height:12px!important;padding:6px!important;stroke-width:2!important}
-.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important}
+.bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important;order:3!important}
 .bpHeaderContentActionsIcons[aria-label*="Close" i]:hover{background:rgba(255,255,255,.36)!important}
-.bpHeaderContentActionsIcons[aria-label*="Restart" i]{width:25px!important;height:25px!important;padding:6px!important;stroke-width:1.8!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important}
+.bpHeaderContentActionsIcons[aria-label*="Restart" i]{width:25px!important;height:25px!important;padding:6px!important;stroke-width:1.8!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;order:1!important}
 .bpHeaderContentActionsIcons:hover{background:rgba(255,255,255,.22)!important}
 .achord-bot-av{width:41px!important;height:38px!important;background:transparent!important;border:none!important;border-radius:0!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#fff!important;flex-shrink:0!important;order:1!important;overflow:visible!important}
 .achord-bot-av svg{width:41px!important;height:38px!important;opacity:.54!important;overflow:visible!important}
-.achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:3!important}
+.achord-expand-btn{color:#fff!important;width:24.5px!important;height:24.5px!important;cursor:pointer!important;border-radius:6.13px!important;background:rgba(255,252,241,.26)!important;border:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;${F}!important;font-size:23px!important;line-height:1!important;padding:0!important;order:2!important}
 .achord-expand-btn:hover{background:rgba(255,252,241,.42)!important}
 @media (max-width:480px){.bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:calc(var(--ac-fab-b,20px) + 70px)!important;height:auto!important;max-height:none!important}.bpWebchat.achord-side,.bpFABWebchat.achord-side{width:calc(100vw - 24px)!important;right:12px!important;top:12px!important;bottom:calc(var(--ac-fab-b,20px) + 70px)!important}.achord-expand-btn{display:none!important}
 /* v22.5.34 — FAB near the bottom (positionFab keeps it above any sticky bar / the
@@ -171,9 +173,13 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      "thick idle vs thin thinking" mismatch the user saw). */
   var SEND_ARROW_URI = "data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2017%208'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'1.4'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M15%204H2M2%204L5.4%201.5M2%204L5.4%206.5'%2F%3E%3C%2Fsvg%3E";
 
-  /* v22.5.34 — robot FAB icon removed (reverted to Botpress's default bubble).
+  /* v22.5.44 — custom robot FAB icon restored (white line robot, 28px) via
+     .bpFabIcon background-image in BASE_CSS, replacing Botpress's default chat
+     bubble so the launcher no longer reads as a generic chat widget. Chosen by
+     client/Yoni 2026-06-24 to differentiate the bot from the site contact button.
      On mobile while the chat is open, BASE_CSS overlays a collapse chevron on the
-     FAB so it reads as "close". Positioning is handled by positionFab(). */
+     FAB (higher specificity .achord-fab-open) so it reads as "close".
+     Positioning is handled by positionFab(). */
 
   /* ============================================================ */
   /*  Welcome panel content                                       */
@@ -186,8 +192,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   var CH = 'שנכיר?';
   var CS = 'תרצה/י לספר לנו מה הקשר שלך לאקדמיה?';
   /* v22.5.35 — chips rebuilt: gender-inclusive forms, academic/admin staff split,
-     "acher" item dropped per client request. 5 items, fits two rows on desktop. */
-  var CHIPS = ['אני סטודנט/ית', 'אני ממונה/ת מגוון', 'חבר/ת סגל אקדמי', 'חבר/ת סגל מנהלי', 'פשוט מתעניין/ת'];
+     "acher" item dropped per client request. 5 items, fits two rows on desktop.
+     v22.5.42 — reorder only (no wording change): diversity officer first, then
+     admin staff, academic staff, student, interested. Per client (Sahar) 2026-06-17. */
+  var CHIPS = ['אני ממונה/ת מגוון', 'חבר/ת סגל מנהלי', 'חבר/ת סגל אקדמי', 'אני סטודנט/ית', 'פשוט מתעניין/ת'];
 
   /* ============================================================ */
   /*  Expand state                                                */
