@@ -159,7 +159,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  element; here we only restyle the Botpress bot launcher so    */
   /*  the two read as one family, aligned in the bottom-right column.*/
   /* ============================================================ */
-  var FAB_CSS = `.bpFab.bpFab{background:#1b1b1b!important;border-radius:16px!important;box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
+  var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#1b1b1b!important;border-radius:16px!important}
+.bpFab.bpFab{box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
 
   /* ============================================================ */
