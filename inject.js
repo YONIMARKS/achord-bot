@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.45';
+  var VERSION = '22.5.46';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -152,22 +152,15 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpContainer{pointer-events:auto!important}`;
 
   /* ============================================================ */
-  /*  CSS — unified FAB capsule (v22.5.45)                         */
-  /*  One orange pill: contact zone (top) + bot/robot FAB (bottom),*/
-  /*  joined by a thin divider. The bot zone is the native Botpress*/
-  /*  FAB (opens chat); the contact zone is our injected element.  */
-  /*  While the chat is open, the contact zone hides and the FAB   */
-  /*  returns to a full circle showing the collapse chevron.       */
+  /*  CSS — bot FAB in the site's black-squircle language          */
+  /*  (v22.5.46). Matches the existing black contact button: a dark */
+  /*  rounded-square with a white line icon (the robot), instead of */
+  /*  the orange circle. The contact button is a separate Framer    */
+  /*  element; here we only restyle the Botpress bot launcher so    */
+  /*  the two read as one family, aligned in the bottom-right column.*/
   /* ============================================================ */
-  var FAB_CSS = `.bpFabWrapper.bpFabWrapper{display:flex!important;flex-direction:column!important;align-items:center!important;filter:drop-shadow(0 8px 22px rgba(255,129,39,.34))}
-.bpFabWrapper .bpUnreadMessage{display:none!important}
-.bpFab.bpFab{box-shadow:none!important;border-radius:0 0 28px 28px!important}
-.bpFab.achord-fab-open.achord-fab-open{border-radius:50%!important}
-.achord-fab-contact{width:56px;height:50px;box-sizing:border-box;background:var(--ac-p);display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:28px 28px 0 0;border-bottom:1px solid rgba(255,255,255,.5);transition:background .15s ease}
-.achord-fab-contact:hover{background:#FF8E40}
-.achord-fab-contact:active{background:#F57A1E}
-.achord-fab-contact svg{width:25px;height:25px;display:block;pointer-events:none}
-body.achord-bot-open .achord-fab-contact{display:none!important}`;
+  var FAB_CSS = `.bpFab.bpFab{background:#1b1b1b!important;border-radius:16px!important;box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
+.bpFabWrapper .bpUnreadMessage{display:none!important}`;
 
   /* ============================================================ */
   /*  SVG assets — bot avatar (Asset 1), close ✕, restart ⟲, send ← */
@@ -199,14 +192,11 @@ body.achord-bot-open .achord-fab-contact{display:none!important}`;
      FAB (higher specificity .achord-fab-open) so it reads as "close".
      Positioning is handled by positionFab(). */
 
-  /* v22.5.45 — unified FAB capsule: a "contact" zone is injected above the robot
-     FAB (see FAB_CSS + injectContactZone) so the bot and the contact share one
-     orange pill instead of competing as two separate chat-like circles. The bot
-     icon stays the robot; the contact icon is a message bubble (white).
-     CONTACT_URL is a PLACEHOLDER for the demo — replace with the real contact
-     target (page / mailto / tel) before promoting to the client. */
-  var CONTACT_URL = 'https://www.achord.org.il/';
-  var CONTACT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H9l-4 3.5V16.5H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8.5" cy="11" r="1.1" fill="#fff" stroke="none"/><circle cx="12" cy="11" r="1.1" fill="#fff" stroke="none"/><circle cx="15.5" cy="11" r="1.1" fill="#fff" stroke="none"/></svg>';
+  /* v22.5.46 — bot FAB restyled into the site's black-squircle language (see
+     FAB_CSS): dark rounded-square + white robot, to match the existing black
+     contact button so the two align as one family. The earlier orange unified
+     capsule (v22.5.45) was dropped — the contact button is a separate Framer
+     element, so we no longer inject our own contact zone. */
 
   /* ============================================================ */
   /*  Welcome panel content                                       */
@@ -331,31 +321,6 @@ body.achord-bot-open .achord-fab-contact{display:none!important}`;
     a.setAttribute('data-v', '22');
     a.innerHTML = AVATAR_SVG;
     hcc.insertBefore(a, hcc.firstChild);
-  }
-
-  /* ============================================================ */
-  /*  Contact zone injection (v22.5.45 — unified FAB capsule)     */
-  /*  Adds a "contact" button above the native bot FAB, inside    */
-  /*  the FAB wrapper, so the two share one orange pill. Re-added  */
-  /*  automatically if Botpress re-renders the wrapper.            */
-  /* ============================================================ */
-  function injectContactZone(sh) {
-    var wrapper = sh.querySelector('.bpFabWrapper');
-    if (!wrapper) return;
-    if (wrapper.querySelector('.achord-fab-contact')) return;
-    var z = document.createElement('div');
-    z.className = 'achord-fab-contact';
-    z.setAttribute('role', 'button');
-    z.setAttribute('aria-label', 'צור קשר');
-    z.innerHTML = CONTACT_SVG;
-    z.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      try { window.open(CONTACT_URL, '_blank', 'noopener'); } catch (err) {}
-    });
-    /* stop the pointerdown from reaching the FAB / Botpress toggle */
-    z.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
-    wrapper.insertBefore(z, wrapper.firstChild);
   }
 
   /* ============================================================ */
@@ -734,7 +699,6 @@ body.achord-bot-open .achord-fab-contact{display:none!important}`;
     injectStyle(sh, 'ac-v22-fab', FAB_CSS);
     applyExpand(sh);
     injectAvatar(sh);
-    injectContactZone(sh);
     injectExpandButton(sh);
     updateExpandGlyph();  /* v22.5.37 — re-assert icon every tick; safe if button is null */
     swapNativeIcons(sh);
