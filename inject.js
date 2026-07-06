@@ -732,6 +732,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (isNaN(setB)) setB = visB;
       var offset = visB - setB;
       contact.style.setProperty('bottom', Math.round(bottom - offset) + 'px', 'important');
+      /* align the two on the same right edge (contact ships at right:22, FAB at 24) */
+      contact.style.setProperty('right', '24px', 'important');
       bottom = bottom + (crect.height || 44) + gap;
     }
     wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
