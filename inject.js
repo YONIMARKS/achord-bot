@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.47';
+  var VERSION = '22.5.48';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -44,7 +44,7 @@
   /*  CSS — base (chat structure, header, fab)                    */
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
-.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:bottom .2s ease!important}
+.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:none!important}
 .bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFab .bpFabIcon>*{opacity:0!important}
@@ -726,6 +726,17 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       bottom = bottom + ch + gap;
     }
     wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
+    /* v22.5.48 — kill stuck CSSTransitions on the wrapper. A background-tab or
+       mid-transition re-render can freeze a bottom transition in "running" state
+       forever, and a live animation overrides even inline !important styles —
+       the FAB then ignores --ac-fab-b entirely (seen live: stuck at bottom 24px
+       while the var said 90px). Transition was removed from BASE_CSS; this
+       cancel is a belt-and-braces guard for whatever Botpress itself animates. */
+    if (wrapper.getAnimations) {
+      try {
+        wrapper.getAnimations().forEach(function (a) { a.cancel(); });
+      } catch (e) {}
+    }
   }
 
   function run() {
