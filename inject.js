@@ -690,7 +690,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var wrapper = sh.querySelector('.bpFabWrapper');
     if (!wrapper) return;
     var now = Date.now();
-    if (now - _lastFabPos < 800) return;   /* throttle: bottom bars rarely move */
+    if (now - _lastFabPos < 300) return;   /* v22.5.50 — tighter throttle so the
+       column converges fast after breakpoint switches (was 800ms) */
     _lastFabPos = now;
     var vh = window.innerHeight, vw = window.innerWidth;
     var base = isMobile() ? 20 : 28;   /* "relatively close to the bottom" */
@@ -802,6 +803,18 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     _contactEl = null;
     _lastFabPos = 0;
     positionFab(sh);
+    /* Framer mounts the per-breakpoint contact variant asynchronously after
+       resize — chase it with a few delayed repositions so the pair lands
+       together fast instead of waiting for the next interval tick. */
+    [150, 450, 900].forEach(function (d) {
+      setTimeout(function () {
+        var s2 = getShadow();
+        if (!s2) return;
+        _contactEl = null;
+        _lastFabPos = 0;
+        positionFab(s2);
+      }, d);
+    });
     /* v22.5.32 — clear any inline drag styles left from older versions on
        devices where the user previously dragged. CSS now handles positioning. */
     var wrapper = sh.querySelector('.bpFabWrapper');
