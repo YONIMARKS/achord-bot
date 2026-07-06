@@ -607,6 +607,30 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  clicking its close control).                                */
   /* ============================================================ */
   var _siteBd = null;
+  function bgAlpha(cs) {
+    var m = cs.backgroundColor.match(/rgba?\(([^)]+)\)/);
+    if (!m) return 0;
+    var p = m[1].split(',');
+    return p.length === 4 ? parseFloat(p[3]) : 1;
+  }
+  /* a real overlay paints something: its own background, or a large visible
+     card/form inside it. Framer's invisible full-screen a11y/status layers
+     (transparent, empty) must NOT match — matching one dimmed the whole page
+     and swallowed every tap (seen live at z:2147483646). */
+  function isPaintedOverlay(el, vw, vh) {
+    if (bgAlpha(getComputedStyle(el)) > 0.05) return true;
+    var kids = el.querySelectorAll('*');
+    for (var i = 0; i < kids.length && i < 80; i++) {
+      var k = kids[i];
+      var r = k.getBoundingClientRect();
+      if (r.width * r.height < vw * vh * 0.12) continue;
+      var kcs = getComputedStyle(k);
+      if (kcs.display === 'none' || kcs.visibility === 'hidden') continue;
+      if (bgAlpha(kcs) > 0.05) return true;
+      if (/^(IMG|VIDEO|IFRAME|FORM|INPUT|TEXTAREA)$/.test(k.tagName)) return true;
+    }
+    return false;
+  }
   function findSiteOverlay() {
     var host = document.getElementById('fab-root');
     var main = document.getElementById('main');
@@ -617,13 +641,15 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (el === host || (host && host.contains(el))) continue;
       if (el === _siteBd) continue;
       if (main && (el === main || el.contains(main))) continue;
+      var cn = '' + (el.className || '');
+      if (/visually_hidden|sr-only|status_/i.test(cn)) continue;
+      if (el.getAttribute('aria-live') || el.getAttribute('role') === 'status') continue;
       var cs = getComputedStyle(el);
       if (cs.position !== 'fixed') continue;
       if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
-      /* invisible a11y/status layers: transparent AND click-through */
-      if (cs.pointerEvents === 'none' && cs.backgroundColor === 'rgba(0, 0, 0, 0)') continue;
       var r = el.getBoundingClientRect();
       if (r.width < vw * 0.8 || r.height < vh * 0.6) continue;
+      if (!isPaintedOverlay(el, vw, vh)) continue;
       return el;
     }
     return null;
