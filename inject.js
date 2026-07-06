@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.54';
+  var VERSION = '22.5.55';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -174,7 +174,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      inline styles is immune to their DOM. */
   var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
-.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important}
+.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,255,255,.32)!important;box-sizing:border-box!important}
+@keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
+.achord-attn-dot{animation:achordAttn 1s ease-in-out 4}
 .bpFab .bpFabIcon,.bpFab .bpFabIcon *{opacity:0!important}
 .bpFab img,.bpFab .bpFabContainer>svg{display:none!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
@@ -373,6 +375,37 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         svg.style.setProperty('display', 'block', 'important');
       }
     }
+    /* v22.5.55 — first-visit attention dot: a small orange dot in the top-right
+       corner of the bot button, blinks 4 times and goes away. Shown once per
+       browser (localStorage flag survives our bp-webchat storage wipe). */
+    try {
+      if (open) {
+        var d0 = fab.querySelector('.achord-attn-dot');
+        if (d0) { d0.parentNode.removeChild(d0); }
+        localStorage.setItem('achord-attn-1', '1');
+      } else if (!localStorage.getItem('achord-attn-1') && !fab.querySelector('.achord-attn-dot')) {
+        var dot = document.createElement('div');
+        dot.className = 'achord-attn-dot';
+        dot.setAttribute('aria-hidden', 'true');
+        var ds = dot.style;
+        ds.setProperty('position', 'absolute', 'important');
+        ds.setProperty('top', '5px', 'important');
+        ds.setProperty('right', '5px', 'important');
+        ds.setProperty('width', '9px', 'important');
+        ds.setProperty('height', '9px', 'important');
+        ds.setProperty('border-radius', '50%', 'important');
+        ds.setProperty('background', '#FF8127', 'important');
+        ds.setProperty('z-index', '4', 'important');
+        ds.setProperty('pointer-events', 'none', 'important');
+        fab.appendChild(dot);
+        setTimeout(function () {
+          try {
+            if (dot.parentNode) dot.parentNode.removeChild(dot);
+            localStorage.setItem('achord-attn-1', '1');
+          } catch (e2) {}
+        }, 4300);
+      }
+    } catch (e3) {}
   }
 
   /* ============================================================ */
@@ -655,6 +688,20 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var p = m[1].split(',');
     return p.length === 4 ? parseFloat(p[3]) : 1;
   }
+  function hasPaintedContent(el) {
+    if (bgAlpha(getComputedStyle(el)) > 0.05) return true;
+    var kids = el.querySelectorAll('*');
+    for (var i = 0; i < kids.length && i < 60; i++) {
+      var k = kids[i];
+      var r = k.getBoundingClientRect();
+      if (r.width * r.height < 800) continue;
+      var kcs = getComputedStyle(k);
+      if (kcs.display === 'none' || kcs.visibility === 'hidden') continue;
+      if (bgAlpha(kcs) > 0.05) return true;
+      if (/^(IMG|VIDEO|svg|SVG)$/.test(k.tagName)) return true;
+    }
+    return false;
+  }
   /* a real overlay paints something: its own background, or a large visible
      card/form inside it. Framer's invisible full-screen a11y/status layers
      (transparent, empty) must NOT match — matching one dimmed the whole page
@@ -894,6 +941,12 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       var cs = getComputedStyle(el);
       if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
       if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
+      /* v22.5.55 — the Framer badge is NOT an obstacle (the pair deliberately
+         covers it near the footer), and neither are invisible layout bars:
+         an obstacle must actually paint something (e.g. the steps-nav tracker). */
+      if ((el.textContent || '').indexOf('Made in Framer') >= 0) continue;
+      if (el.querySelector && el.querySelector('a[href*="framer.com"]')) continue;
+      if (!hasPaintedContent(el)) continue;
       var r = el.getBoundingClientRect();
       /* v22.5.50 — only true bottom bars/badges count as obstacles (height ≤120px).
          Tall page sections that merely poke into the corner at some breakpoints
@@ -905,7 +958,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (r.top < topMost) { topMost = r.top; found = true; }
     }
     var bottom = base;
-    if (found && !isMobile()) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
+    /* lift above obstacles (trackers) — except when the user reached the page
+       bottom: there the pair slides onto the footer at its base position. */
+    if (found && !atPageBottom()) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
     if (contact) {
       /* v22.5.51 — FULL takeover of the contact's positioning. Framer drives
          this element with scroll-linked transforms, which made it "dance"
@@ -915,6 +970,8 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       setImp(contact, 'transform', 'none');
       setImp(contact, 'transition', 'none');
       setImp(contact, 'box-shadow', '0 6px 18px rgba(0,0,0,.25)');
+      setImp(contact, 'border', '1px solid rgba(255,255,255,.32)');
+      setImp(contact, 'box-sizing', 'border-box');
       var crect = contact.getBoundingClientRect();
       var visB = vh - crect.bottom;
       var setB = parseFloat(contact.style.bottom);
