@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.50';
+  var VERSION = '22.5.51';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -158,10 +158,14 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  measured live on the site. The bot FAB adopts the exact same */
   /*  spec so the two read as one family; positionFab() stacks the */
   /*  bot directly above the contact button in the same column.    */
+  /*  v22.5.51 — FAB icon replaced with the aChord robot logo mark */
+  /*  (Vector.svg from Yoni, white @53% like the header avatar).   */
   /* ============================================================ */
+  var BOT_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 38" fill="none"><path d="M40.5354 24.2738C40.4871 23.7047 40.1494 23.2841 39.7393 22.9625C39.1 22.6656 38.7622 22.6409 38.0747 22.6285C37.8696 22.6285 37.0253 22.6656 36.8926 22.5914V22.48L36.9046 22.0842C36.8805 20.0678 35.9638 17.3092 34.9988 15.701C33.5634 13.3259 31.4284 11.4703 28.9074 10.4064C28.3646 10.1961 27.8218 10.0106 27.2669 9.84975C27.0015 9.7879 26.8085 9.76316 26.5432 9.67656L26.4949 9.65182C26.0124 9.44152 22.8883 9.39204 22.1404 9.37967C22.2007 8.98381 22.2007 7.49935 22.1525 7.09112C22.249 6.96742 22.454 6.81897 22.5867 6.70764C23.0933 6.29941 23.3949 5.90355 23.6603 5.2974C24.0704 4.35724 24.0824 3.281 23.7206 2.3161C23.2863 1.2275 22.5867 0.658454 21.5494 0.200745L21.3805 0.138893C20.6206 -0.0342945 20.3793 -0.0342945 19.6073 0.0770401C19.0404 0.200745 18.763 0.32445 18.2564 0.608972C17.9186 0.881124 17.4965 1.2275 17.2673 1.59861C16.821 2.3161 16.6159 3.04596 16.6159 3.76345C16.6159 4.91391 17.1708 6.01489 18.184 6.86845C18.3287 6.99216 18.4252 7.02927 18.4373 7.2272C18.5097 7.94469 18.4373 8.67455 18.4856 9.39204C17.7859 9.40441 15.3976 9.39204 14.8186 9.58997C13.3953 9.7013 11.3326 10.5054 10.1023 11.26H10.0902C6.97815 13.1898 4.97581 15.8371 4.07114 19.5235C3.84196 20.4637 3.69721 21.676 3.75752 22.6409C2.59954 22.6285 1.00733 22.3811 0.331838 23.5563C0.283589 23.6305 0.211215 23.8037 0.162966 23.8779C-0.066217 24.3851 -0.0420925 30.2364 0.162966 30.8054H0.175028C0.307713 31.2507 0.597208 31.6219 0.995263 31.8445C1.14001 31.9311 1.23651 31.9559 1.40538 31.9806H1.41744C1.92406 32.1662 3.17853 32.1291 3.70927 32.0672C3.69721 33.094 3.64896 34.0217 3.89021 35.0361C3.89021 35.432 4.52951 36.3598 4.80694 36.6443C5.73574 37.5968 6.79721 37.77 8.06375 37.77H30.6323C32.3813 37.77 34.456 38.0545 35.7949 36.6567C36.8805 35.5186 36.8926 34.2939 36.9046 32.7971V32.0796C37.3871 32.1167 38.5572 32.1414 39.0155 32.0425C40.3424 31.9064 40.6198 30.4838 40.5836 29.3704C40.5354 27.6757 40.6681 25.9562 40.5354 24.2738ZM9.00461 21.7131H9.01667C9.01667 21.7131 8.98049 21.7378 8.96842 21.7626C8.98049 21.7378 8.99255 21.7254 9.00461 21.7131ZM14.5774 29.3828C14.0949 29.7168 13.54 29.9642 12.961 30.0879C12.6474 30.1498 12.3338 30.1869 12.0202 30.1869C11.0914 30.1869 10.1747 29.9024 9.40267 29.3457C8.498 28.7024 7.84663 27.7499 7.5692 26.6489C7.30383 25.585 7.40033 24.4593 7.8587 23.4697C8.51006 22.0594 9.80072 21.0574 11.3206 20.8224C11.5618 20.7853 11.791 20.7729 12.0202 20.7729C13.8898 20.7729 15.5906 21.9234 16.2902 23.7542C17.0743 25.8077 16.3626 28.1457 14.5774 29.3828ZM18.4976 6.6829C18.4976 6.6829 18.4614 6.6829 18.4494 6.70764C18.4614 6.6829 18.4856 6.6829 18.4976 6.67053V6.6829ZM22.0198 7.3509V7.31379C22.0198 7.31379 22.0198 7.31379 22.0319 7.28905C22.0198 7.30142 22.0198 7.32616 22.0198 7.3509ZM25.9762 29.6178C25.9762 29.6178 25.9762 29.6055 25.9642 29.6055H25.9762C25.9762 29.6055 26.0365 29.5807 26.0607 29.5807C26.0365 29.5931 26.0124 29.6055 25.9762 29.6178ZM32.1762 28.4179C32.1159 28.4797 32.0556 28.554 31.9953 28.6282C31.1992 29.5312 30.0895 30.0879 28.9074 30.1745C28.5334 30.1992 28.1595 30.1745 27.7976 30.1127C27.5443 30.0755 27.291 30.0013 27.0498 29.9147C26.7844 29.8158 26.519 29.6921 26.2657 29.5436C25.4334 29.0488 24.77 28.2818 24.384 27.3788C24.3116 27.218 24.2513 27.0571 24.2031 26.884C23.7688 25.449 24.0221 23.8903 24.8906 22.678C25.5661 21.7254 26.5673 21.0822 27.6891 20.8471C29.5828 20.4637 31.5128 21.3296 32.514 23.0244C33.5151 24.7191 33.3825 26.8716 32.1762 28.4179Z" fill="#F8F8F8" fill-opacity="0.53"/></svg>';
+  var BOT_ICON_URI = 'data:image/svg+xml,' + encodeURIComponent(BOT_ICON_SVG);
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
 .bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important}
-.bpFab .bpFabIcon{background-size:24px 24px!important}
+.bpFab .bpFabIcon{background-image:url("${BOT_ICON_URI}")!important;background-size:27px 25px!important;background-repeat:no-repeat!important;background-position:center!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
 
   /* ============================================================ */
@@ -662,6 +666,17 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      above it with a small gap — one aligned column, both above the badge. */
   var _lastFabPos = 0;
   var _contactEl = null;
+  /* write a style property only when the value actually changed — the run loop
+     fires on every DOM mutation, and redundant writes made the buttons jitter */
+  function setImp(el, prop, val) {
+    if (el.style.getPropertyValue(prop) === val) return;
+    el.style.setProperty(prop, val, 'important');
+  }
+  function atPageBottom() {
+    var doc = document.documentElement;
+    var y = window.scrollY || window.pageYOffset || doc.scrollTop || 0;
+    return (window.innerHeight + y) >= ((doc.scrollHeight || document.body.scrollHeight) - 16);
+  }
   function findContact(host, vh, vw) {
     /* cached element still valid? */
     if (_contactEl && document.contains(_contactEl)) {
@@ -725,26 +740,37 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var bottom = base;
     if (found) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
     if (contact) {
-      /* land the contact's VISUAL bottom at the cleared level. Framer renders
-         this button with a persistent translateY(-80px) (measured live), so
-         its painted position sits higher than the CSS bottom we set. Compute
-         the live offset from the rect and compensate; first tick may read
-         offset 0 (computed bottom of a fixed element = used value), the next
-         tick self-corrects and it stays converged. */
+      /* v22.5.51 — FULL takeover of the contact's positioning. Framer drives
+         this element with scroll-linked transforms, which made it "dance"
+         during scroll while our compensation chased it. Killing transform +
+         transition means: it moves ONLY when we move it, in the same frame as
+         the bot — one unit. Unified shadow with the bot FAB. */
+      setImp(contact, 'transform', 'none');
+      setImp(contact, 'transition', 'none');
+      setImp(contact, 'box-shadow', '0 6px 18px rgba(0,0,0,.25)');
       var crect = contact.getBoundingClientRect();
       var visB = vh - crect.bottom;
       var setB = parseFloat(contact.style.bottom);
       if (isNaN(setB)) setB = visB;
-      var offset = visB - setB;
-      contact.style.setProperty('bottom', Math.round(bottom - offset) + 'px', 'important');
-      /* align the two on the same right edge (contact ships at right:22, FAB at 24) */
-      contact.style.setProperty('right', '24px', 'important');
-      /* v22.5.50 — no transition on the contact either: both buttons must move in
-         the same frame, as one unit, instead of the contact gliding after the FAB. */
-      contact.style.setProperty('transition', 'none', 'important');
-      bottom = bottom + (crect.height || 44) + gap;
+      var offset = visB - setB;   /* ~0 once transform is dead; kept as safety */
+      var pairGap = 8;
+      if (atPageBottom()) {
+        /* fully scrolled: switch to a horizontal row (bot right, contact to its
+           left) so the pair covers less height above bottom trackers */
+        setImp(contact, 'bottom', Math.round(bottom - offset) + 'px');
+        setImp(contact, 'right', (24 + 44 + pairGap) + 'px');
+        /* bot stays at the cleared level — same row */
+      } else {
+        /* vertical column: contact at the cleared level, bot right above it */
+        setImp(contact, 'bottom', Math.round(bottom - offset) + 'px');
+        setImp(contact, 'right', '24px');
+        bottom = bottom + (crect.height || 44) + pairGap;
+      }
     }
-    wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
+    var newB = Math.round(bottom) + 'px';
+    if (wrapper.style.getPropertyValue('--ac-fab-b') !== newB) {
+      wrapper.style.setProperty('--ac-fab-b', newB);
+    }
     /* v22.5.48 — kill stuck CSSTransitions on the wrapper. A background-tab or
        mid-transition re-render can freeze a bottom transition in "running" state
        forever, and a live animation overrides even inline !important styles —
@@ -796,6 +822,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (!sh) return;
     applyExpand(sh);
     injectExpandButton(sh);
+    syncBotOpenState(sh);
     /* v22.5.50 — reposition the FAB column immediately on resize (don't wait for
        the throttled tick): breakpoint switches swap the contact variant and the
        pair must land together in the same frame. Cache is also dropped because
@@ -815,20 +842,14 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         positionFab(s2);
       }, d);
     });
-    /* v22.5.32 — clear any inline drag styles left from older versions on
-       devices where the user previously dragged. CSS now handles positioning. */
-    var wrapper = sh.querySelector('.bpFabWrapper');
-    if (wrapper) {
-      if (wrapper.hasAttribute('data-ac-dragged') || wrapper.hasAttribute('data-ac-drag-init')) {
-        wrapper.removeAttribute('data-ac-dragged');
-        wrapper.removeAttribute('data-ac-drag-init');
-      }
-      ['top', 'left', 'right', 'bottom'].forEach(function (p) {
-        if (wrapper.style.getPropertyValue(p)) wrapper.style.removeProperty(p);
-      });
-    }
-    syncBotOpenState(sh);
   });
+
+  /* v22.5.51 — reposition on scroll (throttled inside positionFab): drives the
+     vertical↔horizontal switch at the page bottom and tracker avoidance. */
+  window.addEventListener('scroll', function () {
+    var sh = getShadow();
+    if (sh) positionFab(sh);
+  }, { passive: true });
 
   /* Mark window for debugging */
   try { window.__achordInjectVersion = VERSION; } catch (e) {}
