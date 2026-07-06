@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.46';
+  var VERSION = '22.5.47';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -152,15 +152,16 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpContainer{pointer-events:auto!important}`;
 
   /* ============================================================ */
-  /*  CSS — bot FAB in the site's black-squircle language          */
-  /*  (v22.5.46). Matches the existing black contact button: a dark */
-  /*  rounded-square with a white line icon (the robot), instead of */
-  /*  the orange circle. The contact button is a separate Framer    */
-  /*  element; here we only restyle the Botpress bot launcher so    */
-  /*  the two read as one family, aligned in the bottom-right column.*/
+  /*  CSS — bot FAB matched 1:1 to the site's contact button       */
+  /*  (v22.5.47). The existing Framer contact button is a 44x44    */
+  /*  #494949 rounded-square (radius 8) with a white line icon —   */
+  /*  measured live on the site. The bot FAB adopts the exact same */
+  /*  spec so the two read as one family; positionFab() stacks the */
+  /*  bot directly above the contact button in the same column.    */
   /* ============================================================ */
-  var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#1b1b1b!important;border-radius:16px!important}
-.bpFab.bpFab{box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
+  var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
+.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important}
+.bpFab .bpFabIcon{background-size:24px 24px!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
 
   /* ============================================================ */
@@ -654,8 +655,37 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 
   /* Position the FAB near the bottom, but lifted above any fixed/sticky bottom
      element (page nav bar, the "Made in Framer" badge) so it's never hidden and
-     never covers them. Samples the FAB's column from the bottom up. Throttled. */
+     never covers them. Samples the FAB's column from the bottom up. Throttled.
+     v22.5.47 — contact-aware: if the site's contact button (a fixed ~44px dark
+     square in the bottom-right, exists on narrow breakpoints only) is visible,
+     it is lifted to the same cleared level, and the bot FAB stacks directly
+     above it with a small gap — one aligned column, both above the badge. */
   var _lastFabPos = 0;
+  var _contactEl = null;
+  function findContact(host, vh, vw) {
+    /* cached element still valid? */
+    if (_contactEl && document.contains(_contactEl)) {
+      var ccs = getComputedStyle(_contactEl);
+      if (ccs.display !== 'none' && ccs.visibility !== 'hidden') return _contactEl;
+    }
+    _contactEl = null;
+    var els = document.querySelectorAll('body *');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el === host || (host && host.contains(el))) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+      var r = el.getBoundingClientRect();
+      if (r.width < 38 || r.width > 56 || r.height < 38 || r.height > 56) continue;
+      if (vh - r.bottom > 180 || vw - r.right > 120) continue;
+      /* dark background = the site's contact button (measured: rgb(73,73,73)) */
+      var m = cs.backgroundColor.match(/\d+/g);
+      if (!m || (+m[0] + +m[1] + +m[2]) > 320) continue;
+      _contactEl = el;
+      break;
+    }
+    return _contactEl;
+  }
   function positionFab(sh) {
     var wrapper = sh.querySelector('.bpFabWrapper');
     if (!wrapper) return;
@@ -664,17 +694,20 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     _lastFabPos = now;
     var vh = window.innerHeight, vw = window.innerWidth;
     var base = isMobile() ? 20 : 28;   /* "relatively close to the bottom" */
-    var gap = 14;
+    var gap = 12;
     var host = document.getElementById('fab-root');
+    var contact = findContact(host, vh, vw);
     var fabLeft = vw - 24 - 70, fabRight = vw - 8;   /* FAB column (right side) */
     var topMost = vh, found = false;
     /* scan for fixed/sticky bottom-anchored elements that overlap the FAB's column
        (a page nav bar, the Made-in-Framer badge). Direct scan, not elementsFromPoint,
-       because the badge uses pointer-events:none which elementsFromPoint skips. */
+       because the badge uses pointer-events:none which elementsFromPoint skips.
+       The contact button is excluded — it's part of our column, not an obstacle. */
     var els = document.querySelectorAll('body *');
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
       if (el === host || (host && host.contains(el))) continue;
+      if (contact && (el === contact || contact.contains(el) || el.contains(contact))) continue;
       var cs = getComputedStyle(el);
       if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
       if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
@@ -686,6 +719,12 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     }
     var bottom = base;
     if (found) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
+    if (contact) {
+      /* contact sits at the cleared level; the bot stacks right above it */
+      contact.style.setProperty('bottom', Math.round(bottom) + 'px', 'important');
+      var ch = contact.getBoundingClientRect().height || 44;
+      bottom = bottom + ch + gap;
+    }
     wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
   }
 
