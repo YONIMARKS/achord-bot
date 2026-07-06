@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.48';
+  var VERSION = '22.5.49';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -720,10 +720,19 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var bottom = base;
     if (found) { var need = (vh - topMost) + gap; if (need > base && need < vh * 0.6) bottom = need; }
     if (contact) {
-      /* contact sits at the cleared level; the bot stacks right above it */
-      contact.style.setProperty('bottom', Math.round(bottom) + 'px', 'important');
-      var ch = contact.getBoundingClientRect().height || 44;
-      bottom = bottom + ch + gap;
+      /* land the contact's VISUAL bottom at the cleared level. Framer renders
+         this button with a persistent translateY(-80px) (measured live), so
+         its painted position sits higher than the CSS bottom we set. Compute
+         the live offset from the rect and compensate; first tick may read
+         offset 0 (computed bottom of a fixed element = used value), the next
+         tick self-corrects and it stays converged. */
+      var crect = contact.getBoundingClientRect();
+      var visB = vh - crect.bottom;
+      var setB = parseFloat(contact.style.bottom);
+      if (isNaN(setB)) setB = visB;
+      var offset = visB - setB;
+      contact.style.setProperty('bottom', Math.round(bottom - offset) + 'px', 'important');
+      bottom = bottom + (crect.height || 44) + gap;
     }
     wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
     /* v22.5.48 — kill stuck CSSTransitions on the wrapper. A background-tab or
