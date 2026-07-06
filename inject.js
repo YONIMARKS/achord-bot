@@ -949,6 +949,30 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (sh) positionFab(sh);
   }, { passive: true });
 
+  /* v22.5.52 — tap anywhere outside the chat closes it (mobile). Implemented as
+     a capture-phase document listener with composedPath() rather than relying on
+     the backdrop receiving the event — Framer page layers were eating the hit. */
+  document.addEventListener('pointerdown', function (e) {
+    if (!isMobile()) return;
+    var sh = getShadow();
+    if (!sh) return;
+    var chat = sh.querySelector('.bpWebchat, .bpFABWebchat');
+    if (!chat || !chat.classList.contains('bpOpen')) return;
+    var path = e.composedPath ? e.composedPath() : [];
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    for (var i = 0; i < path.length; i++) {
+      if (path[i] === chat || path[i] === wrapper) return;   /* tap inside — ignore */
+    }
+    try {
+      if (window.botpress && typeof window.botpress.close === 'function') {
+        window.botpress.close();
+        return;
+      }
+    } catch (err) {}
+    var fab = sh.querySelector('.bpFab');
+    if (fab) { try { fab.click(); } catch (err2) {} }
+  }, true);
+
   /* Mark window for debugging */
   try { window.__achordInjectVersion = VERSION; } catch (e) {}
   if (window.console && console.log) console.log('[achord] inject v' + VERSION + ' loaded');
