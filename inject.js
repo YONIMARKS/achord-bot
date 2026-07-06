@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.51';
+  var VERSION = '22.5.52';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -57,6 +57,9 @@
 .bpHeaderContentContainer{display:flex!important;direction:rtl!important;align-items:center!important;gap:5.5px!important;padding:15.4px 39.4px 15.4px 17.6px!important;background:transparent!important;border:none!important;width:100%!important;box-sizing:border-box!important}
 .bpHeaderContentTitle{font-size:17.6px!important;font-weight:600!important;color:var(--ac-id)!important;${F}!important;text-align:right!important;flex:1!important;margin:0!important;line-height:1.37!important;order:2!important;padding:0!important}
 .bpHeaderContentTitle::after,.bpHeaderAvatar,.bpHeaderContentAvatarContainer,.bpHeaderContentDescription,.bpMessageListMarqueeContainer,.bpHeaderConversationHistoryButton{display:none!important}
+[class*="bpHeaderExpanded"]{display:none!important}
+.bpHeaderContentContainer,.bpHeaderContentTitle{cursor:default!important;pointer-events:none!important}
+.bpHeaderContentActionsContainer{pointer-events:auto!important}
 .bpHeaderContentActionsContainer{display:flex!important;direction:rtl!important;gap:2px!important;align-items:center!important;order:3!important}
 .bpHeaderContentActionsIcons{color:#fff!important;cursor:pointer!important;border-radius:6px!important;width:12px!important;height:12px!important;padding:6px!important;stroke-width:2!important}
 .bpHeaderContentActionsIcons[aria-label*="Close" i]{display:flex!important;width:25px!important;height:25px!important;padding:6px!important;color:#fff!important;background:rgba(255,252,241,.26)!important;border-radius:6px!important;box-sizing:border-box!important;stroke-width:1.8!important;cursor:pointer!important;order:3!important}
@@ -75,9 +78,10 @@
 .bpFab.bpFab{width:56px!important;height:56px!important;opacity:1!important}
 .bpFab.achord-fab-open .bpFabIcon>*{opacity:0!important}
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
-/* Backdrop: darker dim + blur for stronger focus. Decorative only (no tap-to-close). */
+/* Backdrop: darker dim + blur for stronger focus. v22.5.52 — tap-to-close:
+   tapping the dimmed area outside the chat closes the bot (was decorative). */
 .achord-mobile-backdrop{position:fixed!important;inset:0!important;background:rgba(18,11,3,.66)!important;-webkit-backdrop-filter:blur(4px) saturate(1.05)!important;backdrop-filter:blur(4px) saturate(1.05)!important;z-index:9998!important;opacity:0!important;pointer-events:none!important;transition:opacity .22s ease!important}
-.achord-mobile-backdrop.is-open{opacity:1!important}}`;
+.achord-mobile-backdrop.is-open{opacity:1!important;pointer-events:auto!important;cursor:pointer!important}}`;
 
   /* ============================================================ */
   /*  CSS — messages, composer, scroll button                     */
@@ -558,7 +562,19 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     bd = document.createElement('div');
     bd.className = 'achord-mobile-backdrop';
     bd.setAttribute('aria-hidden', 'true');
-    /* Decorative only — no tap-to-close handler. Closing happens via the FAB. */
+    /* v22.5.52 — tap on the dimmed area closes the bot (in addition to the FAB). */
+    bd.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        if (window.botpress && typeof window.botpress.close === 'function') {
+          window.botpress.close();
+          return;
+        }
+      } catch (err) {}
+      var fab = sh.querySelector('.bpFab');
+      if (fab) { try { fab.click(); } catch (err2) {} }
+    });
     /* Insert as a sibling of the webchat so z-index ordering inside the shadow
        root puts it under the chat (z-index 9998 vs chat 10000). */
     var webchat = sh.querySelector('.bpWebchat') || sh.querySelector('.bpFABWebchat');
@@ -580,6 +596,87 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     ['top', 'left', 'right', 'bottom'].forEach(function (p) {
       if (wrapper.style.getPropertyValue(p)) wrapper.style.removeProperty(p);
     });
+  }
+
+  /* ============================================================ */
+  /*  v22.5.52 — site overlay (e.g. the Framer contact window)    */
+  /*  When a full-screen Framer overlay opens: (1) dim+blur the   */
+  /*  page behind it exactly like the bot's backdrop, (2) hide    */
+  /*  the FAB pair so nothing covers the panel or its close ✕,    */
+  /*  (3) tapping the dimmed area closes the overlay (Escape +    */
+  /*  clicking its close control).                                */
+  /* ============================================================ */
+  var _siteBd = null;
+  function findSiteOverlay() {
+    var host = document.getElementById('fab-root');
+    var main = document.getElementById('main');
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var els = document.querySelectorAll('body *');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el === host || (host && host.contains(el))) continue;
+      if (el === _siteBd) continue;
+      if (main && (el === main || el.contains(main))) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed') continue;
+      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
+      /* invisible a11y/status layers: transparent AND click-through */
+      if (cs.pointerEvents === 'none' && cs.backgroundColor === 'rgba(0, 0, 0, 0)') continue;
+      var r = el.getBoundingClientRect();
+      if (r.width < vw * 0.8 || r.height < vh * 0.6) continue;
+      return el;
+    }
+    return null;
+  }
+  function closeSiteOverlay(overlay) {
+    /* Escape usually closes Framer overlays */
+    try {
+      var ev = new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, which: 27, bubbles: true });
+      document.dispatchEvent(ev);
+      document.body.dispatchEvent(ev);
+    } catch (e) {}
+    /* also click an explicit close control if the overlay has one */
+    try {
+      var x = overlay.querySelector('[data-framer-name*="lose" i],[aria-label*="lose" i],[data-framer-name="X"],[data-framer-name="x"]');
+      if (x) x.click();
+    } catch (e2) {}
+  }
+  function handleSiteOverlay(sh) {
+    var overlay = findSiteOverlay();
+    var wrapper = sh.querySelector('.bpFabWrapper');
+    if (overlay) {
+      /* hide the FAB pair so nothing sits above the panel */
+      if (wrapper) setImp(wrapper, 'display', 'none');
+      if (_contactEl && document.contains(_contactEl)) setImp(_contactEl, 'display', 'none');
+      /* dim backdrop just under the overlay (same look as the bot's) */
+      if (!_siteBd || !document.contains(_siteBd)) {
+        _siteBd = document.createElement('div');
+        _siteBd.className = 'achord-site-backdrop';
+        _siteBd.setAttribute('aria-hidden', 'true');
+        var s = _siteBd.style;
+        s.setProperty('position', 'fixed', 'important');
+        s.setProperty('inset', '0', 'important');
+        s.setProperty('background', 'rgba(18,11,3,.66)', 'important');
+        s.setProperty('-webkit-backdrop-filter', 'blur(4px) saturate(1.05)', 'important');
+        s.setProperty('backdrop-filter', 'blur(4px) saturate(1.05)', 'important');
+        s.setProperty('cursor', 'pointer', 'important');
+        _siteBd.addEventListener('click', function () {
+          var ov = findSiteOverlay();
+          if (ov) closeSiteOverlay(ov);
+        });
+      }
+      /* keep it painted UNDER the overlay: same parent, previous sibling */
+      if (_siteBd.nextSibling !== overlay || _siteBd.parentNode !== overlay.parentNode) {
+        overlay.parentNode.insertBefore(_siteBd, overlay);
+      }
+      var oz = getComputedStyle(overlay).zIndex;
+      _siteBd.style.setProperty('z-index', (oz !== 'auto' && !isNaN(parseInt(oz, 10))) ? String(parseInt(oz, 10)) : 'auto', 'important');
+    } else {
+      if (_siteBd && _siteBd.parentNode) _siteBd.parentNode.removeChild(_siteBd);
+      /* restore the FAB pair (unless the bot chat itself hid them elsewhere) */
+      if (wrapper && wrapper.style.getPropertyValue('display') === 'none') wrapper.style.removeProperty('display');
+      if (_contactEl && document.contains(_contactEl) && _contactEl.style.getPropertyValue('display') === 'none') _contactEl.style.removeProperty('display');
+    }
   }
 
   function syncBotOpenState(sh) {
@@ -802,6 +899,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     pinSendButton(sh);
     manageWelcome(sh);
     syncBotOpenState(sh);
+    handleSiteOverlay(sh);
     localize(sh);
     localize(document.body);
     /* If we marked the session as needing reset, attempt the in-app restart
