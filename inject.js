@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.52';
+  var VERSION = '22.5.53';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -45,10 +45,9 @@
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
 .bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:none!important}
-.bpFab.bpFab{background:var(--ac-p)!important;box-shadow:0 8px 24px rgba(255,129,39,.4)!important;width:56px!important;height:56px!important;transition:transform .25s ease,background .2s ease,box-shadow .2s ease!important}
+.bpFab.bpFab{background:#494949!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;width:44px!important;height:44px!important;transition:none!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFab .bpFabIcon>*{opacity:0!important}
-.bpFab .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 24 24' fill%3D'none' stroke%3D'%23ffffff' stroke-width%3D'1.7' stroke-linecap%3D'round' stroke-linejoin%3D'round'%3E%3Crect x%3D'4.5' y%3D'8' width%3D'15' height%3D'11' rx%3D'3'%2F%3E%3Ccircle cx%3D'9' cy%3D'13' r%3D'1.5' fill%3D'%23ffffff' stroke%3D'none'%2F%3E%3Ccircle cx%3D'15' cy%3D'13' r%3D'1.5' fill%3D'%23ffffff' stroke%3D'none'%2F%3E%3Cpath d%3D'M9.5 16.2h5'%2F%3E%3Cpath d%3D'M12 8V5'%2F%3E%3Ccircle cx%3D'12' cy%3D'3.6' r%3D'1.1'%2F%3E%3Cpath d%3D'M3 12.5v3M21 12.5v3'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:28px 28px!important}
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
 .bpContainer{background:var(--ac-c)!important;width:100%!important;height:100%!important;box-shadow:none!important;border-radius:17.516px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 .bpWebchat:not(.bpOpen),.bpFABWebchat:not(.bpOpen){display:none!important;visibility:hidden!important}
@@ -75,7 +74,7 @@
    Made-in-Framer badge), full opacity, 56px. While the chat is open the FAB shows
    a collapse chevron; tapping it closes the chat (Botpress native toggle). */
 .bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,20px)!important;right:24px!important;left:auto!important}
-.bpFab.bpFab{width:56px!important;height:56px!important;opacity:1!important}
+.bpFab.bpFab{width:44px!important;height:44px!important;opacity:1!important}
 .bpFab.achord-fab-open .bpFabIcon>*{opacity:0!important}
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
 /* Backdrop: darker dim + blur for stronger focus. v22.5.52 — tap-to-close:
@@ -166,7 +165,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  (Vector.svg from Yoni, white @53% like the header avatar).   */
   /* ============================================================ */
   var BOT_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 38" fill="none"><path d="M40.5354 24.2738C40.4871 23.7047 40.1494 23.2841 39.7393 22.9625C39.1 22.6656 38.7622 22.6409 38.0747 22.6285C37.8696 22.6285 37.0253 22.6656 36.8926 22.5914V22.48L36.9046 22.0842C36.8805 20.0678 35.9638 17.3092 34.9988 15.701C33.5634 13.3259 31.4284 11.4703 28.9074 10.4064C28.3646 10.1961 27.8218 10.0106 27.2669 9.84975C27.0015 9.7879 26.8085 9.76316 26.5432 9.67656L26.4949 9.65182C26.0124 9.44152 22.8883 9.39204 22.1404 9.37967C22.2007 8.98381 22.2007 7.49935 22.1525 7.09112C22.249 6.96742 22.454 6.81897 22.5867 6.70764C23.0933 6.29941 23.3949 5.90355 23.6603 5.2974C24.0704 4.35724 24.0824 3.281 23.7206 2.3161C23.2863 1.2275 22.5867 0.658454 21.5494 0.200745L21.3805 0.138893C20.6206 -0.0342945 20.3793 -0.0342945 19.6073 0.0770401C19.0404 0.200745 18.763 0.32445 18.2564 0.608972C17.9186 0.881124 17.4965 1.2275 17.2673 1.59861C16.821 2.3161 16.6159 3.04596 16.6159 3.76345C16.6159 4.91391 17.1708 6.01489 18.184 6.86845C18.3287 6.99216 18.4252 7.02927 18.4373 7.2272C18.5097 7.94469 18.4373 8.67455 18.4856 9.39204C17.7859 9.40441 15.3976 9.39204 14.8186 9.58997C13.3953 9.7013 11.3326 10.5054 10.1023 11.26H10.0902C6.97815 13.1898 4.97581 15.8371 4.07114 19.5235C3.84196 20.4637 3.69721 21.676 3.75752 22.6409C2.59954 22.6285 1.00733 22.3811 0.331838 23.5563C0.283589 23.6305 0.211215 23.8037 0.162966 23.8779C-0.066217 24.3851 -0.0420925 30.2364 0.162966 30.8054H0.175028C0.307713 31.2507 0.597208 31.6219 0.995263 31.8445C1.14001 31.9311 1.23651 31.9559 1.40538 31.9806H1.41744C1.92406 32.1662 3.17853 32.1291 3.70927 32.0672C3.69721 33.094 3.64896 34.0217 3.89021 35.0361C3.89021 35.432 4.52951 36.3598 4.80694 36.6443C5.73574 37.5968 6.79721 37.77 8.06375 37.77H30.6323C32.3813 37.77 34.456 38.0545 35.7949 36.6567C36.8805 35.5186 36.8926 34.2939 36.9046 32.7971V32.0796C37.3871 32.1167 38.5572 32.1414 39.0155 32.0425C40.3424 31.9064 40.6198 30.4838 40.5836 29.3704C40.5354 27.6757 40.6681 25.9562 40.5354 24.2738ZM9.00461 21.7131H9.01667C9.01667 21.7131 8.98049 21.7378 8.96842 21.7626C8.98049 21.7378 8.99255 21.7254 9.00461 21.7131ZM14.5774 29.3828C14.0949 29.7168 13.54 29.9642 12.961 30.0879C12.6474 30.1498 12.3338 30.1869 12.0202 30.1869C11.0914 30.1869 10.1747 29.9024 9.40267 29.3457C8.498 28.7024 7.84663 27.7499 7.5692 26.6489C7.30383 25.585 7.40033 24.4593 7.8587 23.4697C8.51006 22.0594 9.80072 21.0574 11.3206 20.8224C11.5618 20.7853 11.791 20.7729 12.0202 20.7729C13.8898 20.7729 15.5906 21.9234 16.2902 23.7542C17.0743 25.8077 16.3626 28.1457 14.5774 29.3828ZM18.4976 6.6829C18.4976 6.6829 18.4614 6.6829 18.4494 6.70764C18.4614 6.6829 18.4856 6.6829 18.4976 6.67053V6.6829ZM22.0198 7.3509V7.31379C22.0198 7.31379 22.0198 7.31379 22.0319 7.28905C22.0198 7.30142 22.0198 7.32616 22.0198 7.3509ZM25.9762 29.6178C25.9762 29.6178 25.9762 29.6055 25.9642 29.6055H25.9762C25.9762 29.6055 26.0365 29.5807 26.0607 29.5807C26.0365 29.5931 26.0124 29.6055 25.9762 29.6178ZM32.1762 28.4179C32.1159 28.4797 32.0556 28.554 31.9953 28.6282C31.1992 29.5312 30.0895 30.0879 28.9074 30.1745C28.5334 30.1992 28.1595 30.1745 27.7976 30.1127C27.5443 30.0755 27.291 30.0013 27.0498 29.9147C26.7844 29.8158 26.519 29.6921 26.2657 29.5436C25.4334 29.0488 24.77 28.2818 24.384 27.3788C24.3116 27.218 24.2513 27.0571 24.2031 26.884C23.7688 25.449 24.0221 23.8903 24.8906 22.678C25.5661 21.7254 26.5673 21.0822 27.6891 20.8471C29.5828 20.4637 31.5128 21.3296 32.514 23.0244C33.5151 24.7191 33.3825 26.8716 32.1762 28.4179Z" fill="#F8F8F8" fill-opacity="0.53"/></svg>';
-  var BOT_ICON_URI = 'data:image/svg+xml,' + encodeURIComponent(BOT_ICON_SVG);
+  var BOT_ICON_URI = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(BOT_ICON_SVG);
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
 .bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important}
 .bpFab .bpFabIcon{background-image:url("${BOT_ICON_URI}")!important;background-size:27px 25px!important;background-repeat:no-repeat!important;background-position:center!important}
@@ -939,6 +938,18 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /* poll + observe the page so styles/avatars re-assert after Botpress re-renders.
      FAB icon left as Botpress default (speech bubble) — custom icon hack removed in v22.5.28. */
   setInterval(run, 400);
+
+  /* v22.5.53 — fast bootstrap: for the first seconds, tick every 50ms until the
+     shadow root exists and our styles are in. Kills the flash of Botpress's own
+     theme (orange button, default bubble icon) between its mount and our first
+     400ms tick. */
+  var _boot = setInterval(function () {
+    var sh = getShadow();
+    if (!sh) return;
+    run();
+    if (sh.getElementById('ac-v22-fab')) clearInterval(_boot);
+  }, 50);
+  setTimeout(function () { clearInterval(_boot); }, 8000);
 
   new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('resize', function () {
