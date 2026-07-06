@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.55';
+  var VERSION = '22.5.56';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -172,7 +172,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      FAB internals, which is why CSS aimed at .bpFabIcon looked fine in one
      browser and showed the default bubble in another. An injected element with
      inline styles is immune to their DOM. */
-  var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+  var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#F8F8F8" stroke-opacity="0.53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
 .bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,255,255,.32)!important;box-sizing:border-box!important}
 @keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
@@ -368,12 +368,22 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (el.getAttribute('data-ic') !== want) {
       el.setAttribute('data-ic', want);
       el.innerHTML = open ? CHEVRON_SVG : BOT_ICON_SVG;
-      var svg = el.querySelector('svg');
-      if (svg) {
-        svg.style.setProperty('width', open ? '22px' : '27px', 'important');
-        svg.style.setProperty('height', open ? '22px' : '25px', 'important');
-        svg.style.setProperty('display', 'block', 'important');
+    }
+    /* v22.5.56 — size the glyph relative to the current FAB size (which grows to
+       66px when the bot is solo on large screens), every tick so it tracks resize. */
+    var svg = el.querySelector('svg');
+    if (svg) {
+      var fw = fab.getBoundingClientRect().width || 44;
+      if (open) {
+        var cz = Math.round(fw * 0.5);
+        svg.style.setProperty('width', cz + 'px', 'important');
+        svg.style.setProperty('height', cz + 'px', 'important');
+      } else {
+        var lw = Math.round(fw * 0.62);
+        svg.style.setProperty('width', lw + 'px', 'important');
+        svg.style.setProperty('height', Math.round(lw * 38 / 41) + 'px', 'important');
       }
+      svg.style.setProperty('display', 'block', 'important');
     }
     /* v22.5.55 — first-visit attention dot: a small orange dot in the top-right
        corner of the bot button, blinks 4 times and goes away. Shown once per
@@ -927,6 +937,18 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var gap = 12;
     var host = document.getElementById('fab-root');
     var contact = findContact(host, vh, vw);
+    /* v22.5.56 — solo bot (large screens, before the contact button joins) is
+       ~50% bigger; once the pair forms they match at 44. */
+    var _fab = sh.querySelector('.bpFab');
+    if (_fab) {
+      var _solo = !contact;
+      var _fs = _solo ? 66 : 44, _rad = _solo ? 12 : 8;
+      setImp(_fab, 'width', _fs + 'px');
+      setImp(_fab, 'height', _fs + 'px');
+      setImp(_fab, 'border-radius', _rad + 'px');
+      var _cn = _fab.querySelector('.bpFabContainer');
+      if (_cn) { setImp(_cn, 'width', _fs + 'px'); setImp(_cn, 'height', _fs + 'px'); setImp(_cn, 'border-radius', _rad + 'px'); }
+    }
     var fabLeft = vw - 24 - 70, fabRight = vw - 8;   /* FAB column (right side) */
     var topMost = vh, found = false;
     /* scan for fixed/sticky bottom-anchored elements that overlap the FAB's column
@@ -941,11 +963,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       var cs = getComputedStyle(el);
       if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
       if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
-      /* v22.5.55 — the Framer badge is NOT an obstacle (the pair deliberately
-         covers it near the footer), and neither are invisible layout bars:
-         an obstacle must actually paint something (e.g. the steps-nav tracker). */
-      if ((el.textContent || '').indexOf('Made in Framer') >= 0) continue;
-      if (el.querySelector && el.querySelector('a[href*="framer.com"]')) continue;
+      /* v22.5.56 — an obstacle must actually paint something. The Framer badge
+         DOES paint (a white pill) so it counts: the pair rides above it — except
+         at the page bottom, where atPageBottom() below lets them slide onto it. */
       if (!hasPaintedContent(el)) continue;
       var r = el.getBoundingClientRect();
       /* v22.5.50 — only true bottom bars/badges count as obstacles (height ≤120px).
