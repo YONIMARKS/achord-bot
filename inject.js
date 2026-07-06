@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.49';
+  var VERSION = '22.5.50';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -712,7 +712,11 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
       if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
       var r = el.getBoundingClientRect();
-      if (r.width === 0 || r.height === 0 || r.height > vh * 0.5) continue;
+      /* v22.5.50 — only true bottom bars/badges count as obstacles (height ≤120px).
+         Tall page sections that merely poke into the corner at some breakpoints
+         (seen: a 281px-high decorative block at vw≈1200) made the FAB column
+         jump to different heights per width. */
+      if (r.width === 0 || r.height === 0 || r.height > 120) continue;
       if (r.bottom < vh - 40) continue;                 /* not anchored to the bottom */
       if (r.right < fabLeft || r.left > fabRight) continue; /* not under the FAB */
       if (r.top < topMost) { topMost = r.top; found = true; }
@@ -734,6 +738,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       contact.style.setProperty('bottom', Math.round(bottom - offset) + 'px', 'important');
       /* align the two on the same right edge (contact ships at right:22, FAB at 24) */
       contact.style.setProperty('right', '24px', 'important');
+      /* v22.5.50 — no transition on the contact either: both buttons must move in
+         the same frame, as one unit, instead of the contact gliding after the FAB. */
+      contact.style.setProperty('transition', 'none', 'important');
       bottom = bottom + (crect.height || 44) + gap;
     }
     wrapper.style.setProperty('--ac-fab-b', Math.round(bottom) + 'px');
@@ -788,6 +795,13 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (!sh) return;
     applyExpand(sh);
     injectExpandButton(sh);
+    /* v22.5.50 — reposition the FAB column immediately on resize (don't wait for
+       the throttled tick): breakpoint switches swap the contact variant and the
+       pair must land together in the same frame. Cache is also dropped because
+       Framer mounts a different contact element per breakpoint. */
+    _contactEl = null;
+    _lastFabPos = 0;
+    positionFab(sh);
     /* v22.5.32 — clear any inline drag styles left from older versions on
        devices where the user previously dragged. CSS now handles positioning. */
     var wrapper = sh.querySelector('.bpFabWrapper');
