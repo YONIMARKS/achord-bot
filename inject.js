@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.60';
+  var VERSION = '22.5.61';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -695,6 +695,10 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
   /*  clicking its close control).                                */
   /* ============================================================ */
   var _siteBd = null;
+  /* v22.5.61 — the contact element we hid while a site overlay was open, held
+     separately from findContact's cache (which resets when the element is
+     display:none) so we can always restore it on close. */
+  var _ovHiddenContact = null;
   function bgAlpha(cs) {
     var m = cs.backgroundColor.match(/rgba?\(([^)]+)\)/);
     if (!m) return 0;
@@ -783,7 +787,13 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     if (overlay) {
       /* hide the FAB pair so nothing sits above the panel */
       if (wrapper) setImp(wrapper, 'display', 'none');
-      if (_contactEl && document.contains(_contactEl)) setImp(_contactEl, 'display', 'none');
+      /* capture the contact button (while it is still visible) so we can restore
+         it later even after findContact drops its cache */
+      if (!_ovHiddenContact || !document.contains(_ovHiddenContact)) {
+        var _c = findContact(document.getElementById('fab-root'), window.innerHeight, window.innerWidth);
+        if (_c) _ovHiddenContact = _c;
+      }
+      if (_ovHiddenContact && document.contains(_ovHiddenContact)) setImp(_ovHiddenContact, 'display', 'none');
       /* dim backdrop just under the overlay (same look as the bot's) */
       if (!_siteBd || !document.contains(_siteBd)) {
         _siteBd = document.createElement('div');
@@ -811,7 +821,14 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (_siteBd && _siteBd.parentNode) _siteBd.parentNode.removeChild(_siteBd);
       /* restore the FAB pair (unless the bot chat itself hid them elsewhere) */
       if (wrapper && wrapper.style.getPropertyValue('display') === 'none') wrapper.style.removeProperty('display');
-      if (_contactEl && document.contains(_contactEl) && _contactEl.style.getPropertyValue('display') === 'none') _contactEl.style.removeProperty('display');
+      if (_ovHiddenContact) {
+        if (document.contains(_ovHiddenContact) && _ovHiddenContact.style.getPropertyValue('display') === 'none') {
+          _ovHiddenContact.style.removeProperty('display');
+        }
+        _ovHiddenContact = null;   /* forces the pair to re-form (bot back to 44) */
+        _contactEl = null;
+        _lastFabPos = 0;
+      }
     }
   }
 
