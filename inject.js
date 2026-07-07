@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.61';
+  var VERSION = '22.5.62';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -781,54 +781,42 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       if (x) x.click();
     } catch (e2) {}
   }
+  /* v22.5.62 — DRASTICALLY simplified. The Framer contact modal already provides
+     its own dim, its own close X, and native tap-outside-to-close. Our old code
+     added a competing backdrop + tap-close that fought Framer and left the FAB
+     stuck hidden after a real close. Now we do exactly ONE thing: while a site
+     modal is open, hide the FAB pair (visibility, so nothing pokes over the form),
+     and restore it the moment the modal is gone. No backdrop, no tap interception,
+     so Framer's native close always works and the buttons always come back. */
+  function hideNode(el) { setImp(el, 'visibility', 'hidden'); setImp(el, 'pointer-events', 'none'); }
+  function showNode(el) {
+    if (el.style.getPropertyValue('visibility') === 'hidden') {
+      el.style.removeProperty('visibility');
+      el.style.removeProperty('pointer-events');
+    }
+  }
   function handleSiteOverlay(sh) {
     var overlay = findSiteOverlay();
     var wrapper = sh.querySelector('.bpFabWrapper');
     if (overlay) {
-      /* hide the FAB pair so nothing sits above the panel */
-      if (wrapper) setImp(wrapper, 'display', 'none');
-      /* capture the contact button (while it is still visible) so we can restore
-         it later even after findContact drops its cache */
+      if (wrapper) hideNode(wrapper);
+      /* hold the contact ref separately from findContact's cache so restore is
+         guaranteed even after it drops the (now hidden) element */
       if (!_ovHiddenContact || !document.contains(_ovHiddenContact)) {
         var _c = findContact(document.getElementById('fab-root'), window.innerHeight, window.innerWidth);
         if (_c) _ovHiddenContact = _c;
       }
-      if (_ovHiddenContact && document.contains(_ovHiddenContact)) setImp(_ovHiddenContact, 'display', 'none');
-      /* dim backdrop just under the overlay (same look as the bot's) */
-      if (!_siteBd || !document.contains(_siteBd)) {
-        _siteBd = document.createElement('div');
-        _siteBd.className = 'achord-site-backdrop';
-        _siteBd.setAttribute('aria-hidden', 'true');
-        var s = _siteBd.style;
-        s.setProperty('position', 'fixed', 'important');
-        s.setProperty('inset', '0', 'important');
-        s.setProperty('background', 'rgba(18,11,3,.66)', 'important');
-        s.setProperty('-webkit-backdrop-filter', 'blur(4px) saturate(1.05)', 'important');
-        s.setProperty('backdrop-filter', 'blur(4px) saturate(1.05)', 'important');
-        s.setProperty('cursor', 'pointer', 'important');
-        _siteBd.addEventListener('click', function () {
-          var ov = findSiteOverlay();
-          if (ov) closeSiteOverlay(ov);
-        });
-      }
-      /* keep it painted UNDER the overlay: same parent, previous sibling */
-      if (_siteBd.nextSibling !== overlay || _siteBd.parentNode !== overlay.parentNode) {
-        overlay.parentNode.insertBefore(_siteBd, overlay);
-      }
-      var oz = getComputedStyle(overlay).zIndex;
-      _siteBd.style.setProperty('z-index', (oz !== 'auto' && !isNaN(parseInt(oz, 10))) ? String(parseInt(oz, 10)) : 'auto', 'important');
+      if (_ovHiddenContact && document.contains(_ovHiddenContact)) hideNode(_ovHiddenContact);
     } else {
-      if (_siteBd && _siteBd.parentNode) _siteBd.parentNode.removeChild(_siteBd);
-      /* restore the FAB pair (unless the bot chat itself hid them elsewhere) */
-      if (wrapper && wrapper.style.getPropertyValue('display') === 'none') wrapper.style.removeProperty('display');
+      if (wrapper) showNode(wrapper);
       if (_ovHiddenContact) {
-        if (document.contains(_ovHiddenContact) && _ovHiddenContact.style.getPropertyValue('display') === 'none') {
-          _ovHiddenContact.style.removeProperty('display');
-        }
-        _ovHiddenContact = null;   /* forces the pair to re-form (bot back to 44) */
+        if (document.contains(_ovHiddenContact)) showNode(_ovHiddenContact);
+        _ovHiddenContact = null;   /* re-form the pair so the bot returns to 44 */
         _contactEl = null;
         _lastFabPos = 0;
       }
+      /* clean up any leftover backdrop from older versions still in the DOM */
+      if (_siteBd && _siteBd.parentNode) { _siteBd.parentNode.removeChild(_siteBd); _siteBd = null; }
     }
   }
 
