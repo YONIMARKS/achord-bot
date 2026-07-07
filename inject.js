@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.56';
+  var VERSION = '22.5.57';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -942,7 +942,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var _fab = sh.querySelector('.bpFab');
     if (_fab) {
       var _solo = !contact;
-      var _fs = _solo ? 66 : 44, _rad = _solo ? 12 : 8;
+      var _fs = _solo ? 55 : 44, _rad = _solo ? 10 : 8;
       setImp(_fab, 'width', _fs + 'px');
       setImp(_fab, 'height', _fs + 'px');
       setImp(_fab, 'border-radius', _rad + 'px');
