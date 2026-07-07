@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.59';
+  var VERSION = '22.5.60';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -733,26 +733,34 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     }
     return false;
   }
+  /* v22.5.60 — robust, self-healing detection: an overlay is "open" ONLY if the
+     topmost element at the centre of the screen is a full-screen, painted, fixed,
+     interactive layer. When the Framer form closes (stops being the top hit, or
+     goes pointer-events:none) this returns null on the very next tick, so the FAB
+     pair is always restored. Our own backdrop and the bot are excluded, killing
+     the feedback loop that left the buttons hidden forever. */
   function findSiteOverlay() {
     var host = document.getElementById('fab-root');
-    var main = document.getElementById('main');
     var vw = window.innerWidth, vh = window.innerHeight;
-    var els = document.querySelectorAll('body *');
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      if (el === host || (host && host.contains(el))) continue;
-      if (el === _siteBd) continue;
-      if (main && (el === main || el.contains(main))) continue;
-      var cn = '' + (el.className || '');
-      if (/visually_hidden|sr-only|status_/i.test(cn)) continue;
-      if (el.getAttribute('aria-live') || el.getAttribute('role') === 'status') continue;
-      var cs = getComputedStyle(el);
-      if (cs.position !== 'fixed') continue;
-      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
-      var r = el.getBoundingClientRect();
-      if (r.width < vw * 0.8 || r.height < vh * 0.6) continue;
-      if (!isPaintedOverlay(el, vw, vh)) continue;
-      return el;
+    var top = document.elementFromPoint(Math.round(vw / 2), Math.round(vh / 2));
+    if (!top) return null;
+    var n = top;
+    while (n && n !== document.body && n.nodeType === 1) {
+      if (host && (n === host || host.contains(n))) return null;       /* bot on top */
+      var cn = '' + (n.className || '');
+      if (n === _siteBd || /achord-site-backdrop/.test(cn)) return null; /* our own dim */
+      var cs = getComputedStyle(n);
+      if (cs.position === 'fixed') {
+        var r = n.getBoundingClientRect();
+        if (r.width >= vw * 0.8 && r.height >= vh * 0.6 &&
+            cs.pointerEvents !== 'none' && cs.visibility !== 'hidden' &&
+            parseFloat(cs.opacity) > 0.1 &&
+            !/visually_hidden|sr-only|status_/i.test(cn) &&
+            isPaintedOverlay(n, vw, vh)) {
+          return n;
+        }
+      }
+      n = n.parentElement;
     }
     return null;
   }
