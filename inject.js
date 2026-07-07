@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.57';
+  var VERSION = '22.5.58';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -174,7 +174,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      inline styles is immune to their DOM. */
   var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#F8F8F8" stroke-opacity="0.53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
-.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,255,255,.32)!important;box-sizing:border-box!important}
+.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.3)!important;box-sizing:border-box!important}
 @keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
 .achord-attn-dot{animation:achordAttn 1s ease-in-out 4}
 .bpFab .bpFabIcon,.bpFab .bpFabIcon *{opacity:0!important}
@@ -990,7 +990,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       setImp(contact, 'transform', 'none');
       setImp(contact, 'transition', 'none');
       setImp(contact, 'box-shadow', '0 6px 18px rgba(0,0,0,.25)');
-      setImp(contact, 'border', '1px solid rgba(255,255,255,.32)');
+      setImp(contact, 'border', '1px solid rgba(255,252,242,.3)');
       setImp(contact, 'box-sizing', 'border-box');
       var crect = contact.getBoundingClientRect();
       var visB = vh - crect.bottom;
