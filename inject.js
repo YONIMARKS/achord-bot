@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.58';
+  var VERSION = '22.5.59';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -177,6 +177,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 .bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.3)!important;box-sizing:border-box!important}
 @keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
 .achord-attn-dot{animation:achordAttn 1s ease-in-out 4}
+.achord-attn-dot[data-static]{animation:none!important}
 .bpFab .bpFabIcon,.bpFab .bpFabIcon *{opacity:0!important}
 .bpFab img,.bpFab .bpFabContainer>svg{display:none!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
@@ -245,6 +246,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      init so refresh resets to expanded, no matter what previous toggles set. The write
      still happens in toggleExpand → session-local memory only. */
   var exp = true;
+  /* v22.5.59 — did the attention dot already blink this page-load? (resets on
+     reload so the dot re-blinks on every fresh visit/refresh until opened) */
+  var _attnBlinked = false;
 
   function isMobile() { return window.innerWidth <= MOBILE_W; }
   function getShadow() {
@@ -385,17 +389,21 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       }
       svg.style.setProperty('display', 'block', 'important');
     }
-    /* v22.5.55 — first-visit attention dot: a small orange dot in the top-right
-       corner of the bot button, blinks 4 times and goes away. Shown once per
-       browser (localStorage flag survives our bp-webchat storage wipe). */
+    /* v22.5.59 — attention dot: an orange dot in the top-right corner of the bot
+       button. It blinks 4 times then STAYS (static) until the user opens the bot
+       once. It appears on every fresh page load (first visit OR refresh) as long
+       as the bot was never opened; opening sets a persistent flag that suppresses
+       it from then on. The blink plays only once per load (_attnBlinked) so a
+       Botpress FAB re-render re-creates it static, not blinking again. */
     try {
       if (open) {
         var d0 = fab.querySelector('.achord-attn-dot');
         if (d0) { d0.parentNode.removeChild(d0); }
-        localStorage.setItem('achord-attn-1', '1');
-      } else if (!localStorage.getItem('achord-attn-1') && !fab.querySelector('.achord-attn-dot')) {
+        localStorage.setItem('achord-bot-opened', '1');
+      } else if (!localStorage.getItem('achord-bot-opened') && !fab.querySelector('.achord-attn-dot')) {
         var dot = document.createElement('div');
         dot.className = 'achord-attn-dot';
+        if (_attnBlinked) dot.setAttribute('data-static', '1');
         dot.setAttribute('aria-hidden', 'true');
         var ds = dot.style;
         ds.setProperty('position', 'absolute', 'important');
@@ -408,12 +416,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         ds.setProperty('z-index', '4', 'important');
         ds.setProperty('pointer-events', 'none', 'important');
         fab.appendChild(dot);
-        setTimeout(function () {
-          try {
-            if (dot.parentNode) dot.parentNode.removeChild(dot);
-            localStorage.setItem('achord-attn-1', '1');
-          } catch (e2) {}
-        }, 4300);
+        _attnBlinked = true;
       }
     } catch (e3) {}
   }
