@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.62';
+  var VERSION = '22.5.63';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -807,6 +807,26 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         if (_c) _ovHiddenContact = _c;
       }
       if (_ovHiddenContact && document.contains(_ovHiddenContact)) hideNode(_ovHiddenContact);
+      /* v22.5.63 — strong focus dim like the bot's, layered under the modal.
+         pointer-events:none = it NEVER intercepts taps, so Framer's own close (X)
+         works untouched and the buttons always come back. Purely visual. */
+      if (!_siteBd || !document.contains(_siteBd)) {
+        _siteBd = document.createElement('div');
+        _siteBd.className = 'achord-site-backdrop';
+        _siteBd.setAttribute('aria-hidden', 'true');
+        var s2 = _siteBd.style;
+        s2.setProperty('position', 'fixed', 'important');
+        s2.setProperty('inset', '0', 'important');
+        s2.setProperty('background', 'rgba(18,11,3,.6)', 'important');
+        s2.setProperty('-webkit-backdrop-filter', 'blur(3px)', 'important');
+        s2.setProperty('backdrop-filter', 'blur(3px)', 'important');
+        s2.setProperty('pointer-events', 'none', 'important');
+      }
+      if (_siteBd.nextSibling !== overlay || _siteBd.parentNode !== overlay.parentNode) {
+        overlay.parentNode.insertBefore(_siteBd, overlay);
+      }
+      var oz = getComputedStyle(overlay).zIndex;
+      _siteBd.style.setProperty('z-index', (oz !== 'auto' && !isNaN(parseInt(oz, 10))) ? String(parseInt(oz, 10)) : 'auto', 'important');
     } else {
       if (wrapper) showNode(wrapper);
       if (_ovHiddenContact) {
