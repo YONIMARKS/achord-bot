@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.66';
+  var VERSION = '22.5.67';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -37,6 +37,42 @@
       /* manual override for the current load */
       if (/[?&]reset=1\b/.test(location.search)) wipeBpStorage();
     } catch (e) { /* never break injection over reset failure */ }
+  })();
+
+
+  /* ============================================================ */
+  /*  Force light appearance — opt out of browser auto-dark.       */
+  /*  (v22.5.67) Chrome/Android (and some others) algorithmically  */
+  /*  DARKEN pages that never declare a color-scheme. The Framer    */
+  /*  site is light-only by design and has NO dark theme, so the    */
+  /*  darkened look users saw is the browser's force-dark, not the  */
+  /*  site. Declaring color-scheme is the documented opt-out that   */
+  /*  disables force-dark for the whole page (site + bot).          */
+  /* ============================================================ */
+  (function forceLightScheme() {
+    try {
+      var apply = function () {
+        var h = document.head || document.documentElement;
+        if (h && !document.getElementById('achord-color-scheme')) {
+          var m = document.createElement('meta');
+          m.id = 'achord-color-scheme';
+          m.name = 'color-scheme';
+          m.content = 'light only';
+          h.appendChild(m);
+        }
+        if (h && !document.getElementById('achord-light-style')) {
+          var s = document.createElement('style');
+          s.id = 'achord-light-style';
+          s.textContent = ':root{color-scheme:light only!important}html{color-scheme:light only!important}';
+          h.appendChild(s);
+        }
+        try { document.documentElement.style.colorScheme = 'light'; } catch (e) {}
+      };
+      apply();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', apply);
+      }
+    } catch (e) { /* never break injection over color-scheme failure */ }
   })();
 
 
