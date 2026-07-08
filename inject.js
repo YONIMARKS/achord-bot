@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.64';
+  var VERSION = '22.5.65';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -1131,7 +1131,35 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
 
   /* v22.5.51 — reposition on scroll (throttled inside positionFab): drives the
      vertical↔horizontal switch at the page bottom and tracker avoidance. */
+  /* v22.5.65 — Framer applies a scroll-linked appear/parallax transform to the
+     contact button (measured: a few px of translateY that wobbles with scroll).
+     It re-applies every animation frame, so a throttled reset can't keep up. We
+     run a short rAF loop for ~250ms after each scroll that pins the button's
+     transform to none every frame, killing the wobble. The clean fix is to turn
+     OFF the appear/scroll animation on that button in Framer (like the close
+     delay); this is our best-effort neutraliser from the code side. */
+  var _scrollRafActive = false;
+  var _scrollStopAt = 0;
+  function pinContactStatic() {
+    var c = (_contactEl && document.contains(_contactEl)) ? _contactEl :
+            (_ovHiddenContact && document.contains(_ovHiddenContact)) ? _ovHiddenContact : null;
+    if (c) {
+      setImp(c, 'transform', 'none');
+      setImp(c, 'transition', 'none');
+      if (getComputedStyle(c).opacity !== '1') setImp(c, 'opacity', '1');
+    }
+  }
+  function scrollRafLoop() {
+    pinContactStatic();
+    if (Date.now() < _scrollStopAt) {
+      requestAnimationFrame(scrollRafLoop);
+    } else {
+      _scrollRafActive = false;
+    }
+  }
   window.addEventListener('scroll', function () {
+    _scrollStopAt = Date.now() + 250;
+    if (!_scrollRafActive) { _scrollRafActive = true; requestAnimationFrame(scrollRafLoop); }
     var sh = getShadow();
     if (sh) positionFab(sh);
   }, { passive: true });
