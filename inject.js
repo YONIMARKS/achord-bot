@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.65';
+  var VERSION = '22.5.66';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -45,7 +45,7 @@
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
 .bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:none!important}
-.bpFab.bpFab{background:#494949!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;width:44px!important;height:44px!important;transition:none!important}
+.bpFab.bpFab{background:#494949!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;width:46px!important;height:46px!important;transition:none!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFab .bpFabIcon>*{opacity:0!important}
 .bpWebchat.bpWebchat,.bpFABWebchat.bpFABWebchat{right:24px!important;left:auto!important;bottom:160px!important;top:auto!important;width:380px!important;height:600px!important;max-height:calc(100vh - 220px)!important;z-index:10000!important;border-radius:17.516px!important;overflow:hidden!important;box-shadow:0 13.137px 35.032px rgba(73,73,73,.12)!important;border:1.095px solid #E8DFCF!important;box-sizing:border-box!important}
@@ -74,7 +74,7 @@
    Made-in-Framer badge), full opacity, 56px. While the chat is open the FAB shows
    a collapse chevron; tapping it closes the chat (Botpress native toggle). */
 .bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,20px)!important;right:24px!important;left:auto!important}
-.bpFab.bpFab{width:44px!important;height:44px!important;opacity:1!important}
+.bpFab.bpFab{width:46px!important;height:46px!important;opacity:1!important}
 .bpFab.achord-fab-open .bpFabIcon>*{opacity:0!important}
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
 /* Backdrop: darker dim + blur for stronger focus. v22.5.52 — tap-to-close:
@@ -174,7 +174,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      inline styles is immune to their DOM. */
   var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#F8F8F8" stroke-opacity="0.53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
-.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.45)!important;box-sizing:border-box!important}
+.bpFab.bpFab{width:46px!important;height:46px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.45)!important;box-sizing:border-box!important}
 @keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
 .achord-attn-dot{animation:achordAttn 1s ease-in-out infinite}
 .bpFab .bpFabIcon,.bpFab .bpFabIcon *{opacity:0!important}
@@ -969,7 +969,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
     var _fab = sh.querySelector('.bpFab');
     if (_fab) {
       var _solo = !contact;
-      var _fs = _solo ? 55 : 44, _rad = _solo ? 10 : 8;
+      var _fs = _solo ? 55 : 46, _rad = _solo ? 10 : 8;
       setImp(_fab, 'width', _fs + 'px');
       setImp(_fab, 'height', _fs + 'px');
       setImp(_fab, 'border-radius', _rad + 'px');
