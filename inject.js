@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.67';
+  var VERSION = '22.5.68';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -80,7 +80,7 @@
   /*  CSS — base (chat structure, header, fab)                    */
   /* ============================================================ */
   var BASE_CSS = `:host,.bpWebchat,.bpFABWebchat{--ac-p:#FF8127;--ac-d:#EC854B;--ac-c:#FFFCF1;--ac-id:#F4C5AA;--ac-bf:#F0E8D8}
-.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:24px!important;left:auto!important;z-index:9999!important;transition:none!important}
+.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,80px)!important;right:14px!important;left:auto!important;z-index:9999!important;transition:none!important}
 .bpFab.bpFab{background:#494949!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;width:46px!important;height:46px!important;transition:none!important}
 .bpFab [class*="Badge"],.bpFab [class*="Unread"]{display:none!important}
 .bpFab .bpFabIcon>*{opacity:0!important}
@@ -109,7 +109,7 @@
 /* v22.5.34 — FAB near the bottom (positionFab keeps it above any sticky bar / the
    Made-in-Framer badge), full opacity, 56px. While the chat is open the FAB shows
    a collapse chevron; tapping it closes the chat (Botpress native toggle). */
-.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,20px)!important;right:24px!important;left:auto!important}
+.bpFabWrapper.bpFabWrapper{bottom:var(--ac-fab-b,20px)!important;right:14px!important;left:auto!important}
 .bpFab.bpFab{width:46px!important;height:46px!important;opacity:1!important}
 .bpFab.achord-fab-open .bpFabIcon>*{opacity:0!important}
 .bpFab.achord-fab-open .bpFabIcon{background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'%23ffffff'%20stroke-width%3D'3'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpolyline%20points%3D'6%209%2012%2015%2018%209'%2F%3E%3C%2Fsvg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important}
@@ -1065,13 +1065,13 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         /* fully scrolled: switch to a horizontal row (bot right, contact to its
            left) so the pair covers less height above bottom trackers */
         setImp(contact, 'bottom', Math.round(bottom - offset) + 'px');
-        setImp(contact, 'right', (24 + 44 + pairGap) + 'px');
+        setImp(contact, 'right', (14 + 46 + pairGap) + 'px');
         /* bot stays at the cleared level — same row */
       } else {
         /* vertical column: contact at the cleared level, bot right above it */
         setImp(contact, 'bottom', Math.round(bottom - offset) + 'px');
-        setImp(contact, 'right', '24px');
-        bottom = bottom + (crect.height || 44) + pairGap;
+        setImp(contact, 'right', '14px');
+        bottom = bottom + (crect.height || 46) + pairGap;
       }
     }
     var newB = Math.round(bottom) + 'px';
