@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '22.5.63';
+  var VERSION = '22.5.64';
   var F = "font-family:'Heebo',sans-serif";
 
   /* ============================================================ */
@@ -174,10 +174,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      inline styles is immune to their DOM. */
   var CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#F8F8F8" stroke-opacity="0.53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
   var FAB_CSS = `.bpFab.bpFab,.bpFab .bpFabContainer{background:#494949!important;border-radius:8px!important}
-.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.3)!important;box-sizing:border-box!important}
+.bpFab.bpFab{width:44px!important;height:44px!important;box-shadow:0 6px 18px rgba(0,0,0,.25)!important;border:1px solid rgba(255,252,242,.45)!important;box-sizing:border-box!important}
 @keyframes achordAttn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.68)}}
-.achord-attn-dot{animation:achordAttn 1s ease-in-out 4}
-.achord-attn-dot[data-static]{animation:none!important}
+.achord-attn-dot{animation:achordAttn 1s ease-in-out infinite}
 .bpFab .bpFabIcon,.bpFab .bpFabIcon *{opacity:0!important}
 .bpFab img,.bpFab .bpFabContainer>svg{display:none!important}
 .bpFabWrapper .bpUnreadMessage{display:none!important}`;
@@ -246,9 +245,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
      init so refresh resets to expanded, no matter what previous toggles set. The write
      still happens in toggleExpand → session-local memory only. */
   var exp = true;
-  /* v22.5.59 — did the attention dot already blink this page-load? (resets on
-     reload so the dot re-blinks on every fresh visit/refresh until opened) */
-  var _attnBlinked = false;
 
   function isMobile() { return window.innerWidth <= MOBILE_W; }
   function getShadow() {
@@ -389,12 +385,9 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       }
       svg.style.setProperty('display', 'block', 'important');
     }
-    /* v22.5.59 — attention dot: an orange dot in the top-right corner of the bot
-       button. It blinks 4 times then STAYS (static) until the user opens the bot
-       once. It appears on every fresh page load (first visit OR refresh) as long
-       as the bot was never opened; opening sets a persistent flag that suppresses
-       it from then on. The blink plays only once per load (_attnBlinked) so a
-       Botpress FAB re-render re-creates it static, not blinking again. */
+    /* v22.5.64 — attention dot blinks CONTINUOUSLY until the user opens the bot
+       once, then disappears for good (persistent flag). Re-appears on every fresh
+       page load (first visit OR refresh) as long as the bot was never opened. */
     try {
       if (open) {
         var d0 = fab.querySelector('.achord-attn-dot');
@@ -403,7 +396,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       } else if (!localStorage.getItem('achord-bot-opened') && !fab.querySelector('.achord-attn-dot')) {
         var dot = document.createElement('div');
         dot.className = 'achord-attn-dot';
-        if (_attnBlinked) dot.setAttribute('data-static', '1');
         dot.setAttribute('aria-hidden', 'true');
         var ds = dot.style;
         ds.setProperty('position', 'absolute', 'important');
@@ -416,7 +408,6 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
         ds.setProperty('z-index', '4', 'important');
         ds.setProperty('pointer-events', 'none', 'important');
         fab.appendChild(dot);
-        _attnBlinked = true;
       }
     } catch (e3) {}
   }
@@ -1026,7 +1017,7 @@ svg.bpComposerSendButton path{fill:none!important;stroke:#fff!important;stroke-w
       setImp(contact, 'transform', 'none');
       setImp(contact, 'transition', 'none');
       setImp(contact, 'box-shadow', '0 6px 18px rgba(0,0,0,.25)');
-      setImp(contact, 'border', '1px solid rgba(255,252,242,.3)');
+      setImp(contact, 'border', '1px solid rgba(255,252,242,.45)');
       setImp(contact, 'box-sizing', 'border-box');
       var crect = contact.getBoundingClientRect();
       var visB = vh - crect.bottom;
